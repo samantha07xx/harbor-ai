@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from app.utils.markdown_loader import load_markdown_documents
+from app.utils.text_chunker import split_text_into_chunks
 
 router = APIRouter()
 
@@ -15,6 +16,7 @@ def get_knowledge_base():
             {
                 "title": document["title"],
                 "path": document["path"],
+                "chunk_count": len(split_text_into_chunks(document["content"])),
                 "content_preview": document["content"][:200],
             }
             for document in documents
