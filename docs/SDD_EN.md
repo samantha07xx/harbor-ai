@@ -1,7 +1,7 @@
 # Harbor AI SDD
 
-Version: v1.0  
-Date: 2026-07-09  
+Version: v1.1  
+Date: 2026-07-13  
 Document Type: Software Design Document / Technical Execution Guide  
 Audience: Beginners building an AI portfolio project from scratch  
 Project Scope: Ontario newcomers, non-emergency primary care communication, Prepare + Live Assist
@@ -16,8 +16,10 @@ The final project should include:
 - A clear README
 - A PRD
 - An SDD
-- A Markdown knowledge base
-- A RAG ingestion pipeline
+- Official Ontario web-source ingestion
+- A curated Markdown seed/fallback knowledge base
+- A semantic knowledge indexing pipeline
+- A user query pipeline for RAG retrieval and LLM response generation
 - A FastAPI backend
 - A React + TypeScript frontend
 - A Qdrant vector database
@@ -28,15 +30,23 @@ The final project should include:
 Core product logic:
 
 ```text
-Prepare Page
-    ↓
-User Input + RAG Retrieval
-    ↓
-Visit Context
-    ↓
-Live Assist Page
-    ↓
-Context-aware Communication Support
+Indexing Pipeline
+    trusted Ontario web sources / Markdown seed knowledge
+        ↓
+    extraction + structure normalization
+        ↓
+    semantic chunking + AI embeddings
+        ↓
+    Qdrant vector database
+
+User Query Pipeline
+    Prepare / Live Assist input
+        ↓
+    Shared Context + query rewriting
+        ↓
+    semantic retrieval
+        ↓
+    safety-aware LLM response
 ```
 
 ## 2. Tech Stack
@@ -82,16 +92,17 @@ Why:
 - Simple API
 - Suitable for a portfolio demo
 
-### Knowledge Base
+### Knowledge Sources
 
-- Markdown files
+- Official Ontario web pages
+- Curated Markdown seed/fallback files
 
 Why:
 
-- Easy to read on GitHub
-- Easy to review
-- Easy to chunk
-- Good for demonstrating RAG source quality
+- Official web pages provide trusted source material.
+- Curated Markdown keeps the project readable on GitHub.
+- Markdown snapshots help with local development and reproducible demos.
+- Both source types can flow into the same semantic indexing pipeline.
 
 ## 3. Recommended Project Structure
 
@@ -119,23 +130,17 @@ harbor-ai/
     demo_script.md
 
   knowledge_base/
-    ontario/
-      primary_care/
-        walk_in_clinic.md
-        family_doctor.md
-        nurse_practitioner.md
-        health811.md
-      insurance/
-        ohip_basics.md
-        without_ohip.md
-      visit_preparation/
-        appointment_checklist.md
-        symptoms_description.md
-        questions_to_ask.md
-        after_visit_instructions.md
-      safety/
-        emergency_vs_primary_care.md
-        when_to_call_911.md
+      ontario/
+        primary_care/
+          care_options.md
+          finding_primary_care.md
+        insurance/
+          ohip_basics.md
+        visit_preparation/
+          visit_checklist.md
+          symptom_communication.md
+        safety/
+          emergency_and_ai_limits.md
 
   backend/
     app/
@@ -149,20 +154,29 @@ harbor-ai/
         requests.py
         responses.py
         context.py
+      loaders/
+        markdown_loader.py
+        web_loader.py
+      processors/
+        text_extractor.py
+        structure_normalizer.py
+        semantic_chunker.py
       services/
-        llm_service.py
+        knowledge_index_service.py
         embedding_service.py
+        vector_store_service.py
         rag_service.py
-        qdrant_service.py
+        query_rewriter_service.py
+        llm_service.py
         context_service.py
+        safety_service.py
         speech_service.py
       prompts/
         prepare_prompt.md
         live_assist_prompt.md
         safety_prompt.md
       utils/
-        markdown_loader.py
-        text_chunker.py
+        text_utils.py
     scripts/
       ingest_knowledge_base.py
     tests/
@@ -384,7 +398,7 @@ Newcomers often struggle to prepare for primary care visits and communicate clea
 - Prepare page
 - Live Assist page
 - Shared Context
-- RAG over a curated Ontario healthcare Markdown knowledge base
+- RAG over an indexed Ontario healthcare knowledge base built from official web sources and curated Markdown seed content
 
 ## Tech Stack
 
@@ -441,17 +455,17 @@ mkdir -p knowledge_base/ontario/visit_preparation
 mkdir -p knowledge_base/ontario/safety
 ```
 
-### 7.2 Create the First Markdown Sources
+### 7.2 Create the First Markdown Seed Sources
 
 Start with six files:
 
 ```text
-knowledge_base/ontario/primary_care/walk_in_clinic.md
-knowledge_base/ontario/primary_care/family_doctor.md
-knowledge_base/ontario/primary_care/nurse_practitioner.md
-knowledge_base/ontario/primary_care/health811.md
+knowledge_base/ontario/primary_care/care_options.md
+knowledge_base/ontario/primary_care/finding_primary_care.md
 knowledge_base/ontario/insurance/ohip_basics.md
-knowledge_base/ontario/safety/emergency_vs_primary_care.md
+knowledge_base/ontario/visit_preparation/visit_checklist.md
+knowledge_base/ontario/visit_preparation/symptom_communication.md
+knowledge_base/ontario/safety/emergency_and_ai_limits.md
 ```
 
 Use this template for each file:
@@ -498,6 +512,8 @@ Use Ontario-specific official or highly trusted sources:
 - Each file should focus on one topic.
 - Each file should include safety notes.
 - Do not write diagnosis advice.
+- Treat Markdown as seed/fallback content, not the only long-term source type.
+- Treat official web pages as controlled ingestion sources, not live query-time search targets.
 
 ### 7.5 Commit
 
@@ -551,14 +567,19 @@ pip freeze > requirements.txt
 ### 8.4 Create the Backend Structure
 
 ```bash
-mkdir -p app/api app/models app/services app/prompts app/utils scripts tests
+mkdir -p app/api app/models app/loaders app/processors app/services app/prompts app/utils scripts tests
 touch app/main.py app/config.py
 touch app/api/health.py app/api/prepare.py app/api/live_assist.py
 touch app/models/requests.py app/models/responses.py app/models/context.py
+touch app/loaders/markdown_loader.py app/loaders/web_loader.py
+touch app/processors/text_extractor.py app/processors/structure_normalizer.py
+touch app/processors/semantic_chunker.py
+touch app/services/knowledge_index_service.py
 touch app/services/llm_service.py app/services/embedding_service.py
-touch app/services/rag_service.py app/services/qdrant_service.py
-touch app/services/context_service.py app/services/speech_service.py
-touch app/utils/markdown_loader.py app/utils/text_chunker.py
+touch app/services/rag_service.py app/services/vector_store_service.py
+touch app/services/query_rewriter_service.py app/services/context_service.py
+touch app/services/safety_service.py app/services/speech_service.py
+touch app/utils/text_utils.py
 touch scripts/ingest_knowledge_base.py
 ```
 
@@ -739,57 +760,91 @@ git commit -m "Add Qdrant docker compose setup"
 git push origin main
 ```
 
-## 11. Step 7: Implement RAG Ingestion
+## 11. Step 7: Implement the Semantic Indexing Pipeline
 
-The goal of RAG ingestion is:
+The goal of the semantic indexing pipeline is:
 
 ```text
-Read Markdown
+Load trusted Ontario sources
     ↓
-Split into chunks
+Extract useful text
     ↓
-Create embeddings
+Normalize document structure
+    ↓
+Create semantic chunks and metadata
+    ↓
+Create AI embeddings
     ↓
 Store vectors in Qdrant
 ```
 
-### 11.1 `markdown_loader`
+This pipeline prepares the knowledge before users ask questions. It should be separate from the user query pipeline.
+
+### 11.1 `markdown_loader` and `web_loader`
 
 Responsibilities:
 
 - Read `knowledge_base/**/*.md`
 - Return file path, title, content, and source metadata
+- Load official Ontario web pages as primary source material for indexing
+- Do not scrape websites live for every user question
 
-### 11.2 `text_chunker`
-
-Responsibilities:
-
-- Split long Markdown files into smaller chunks
-- Recommended chunk size: 500 to 900 tokens
-- Keep metadata such as file path, topic, and section title
-
-### 11.3 `embedding_service`
+### 11.2 `text_extractor`
 
 Responsibilities:
 
-- Call the OpenAI Embeddings API
+- Extract useful body text from Markdown or web source content
+- Remove navigation, footer, repeated UI text, and non-content material
+- Preserve headings, lists, and source references when useful
+
+### 11.3 `structure_normalizer`
+
+Responsibilities:
+
+- Convert different source formats into a common document shape
+- Preserve title, sections, category, province, source path, source URL, and retrieval date
+- Support official web-source ingestion
+
+### 11.4 `semantic_chunker`
+
+Responsibilities:
+
+- Split content into meaning-preserving chunks
+- Use headings and sections as semantic boundaries
+- Keep complete healthcare communication topics together
+- Add metadata such as section title, category, source, province, and use case
+
+### 11.5 `embedding_service`
+
+Responsibilities:
+
+- Call the OpenAI Embeddings API for real AI embeddings
 - Input chunk text
 - Output vector embeddings
+- Keep a mock/local embedding implementation only as a development fallback
 
-### 11.4 `qdrant_service`
+### 11.6 `vector_store_service`
 
 Responsibilities:
 
-- Create collection
+- Create or connect to the Qdrant collection
 - Upsert vectors
 - Search similar chunks
+- Return chunk text and metadata with search results
 
-### 11.5 `ingest_knowledge_base.py`
+### 11.7 `knowledge_index_service`
 
 Responsibilities:
 
-- Connect the entire ingestion pipeline
-- Run whenever Markdown sources are updated
+- Orchestrate loading, extraction, normalization, semantic chunking, embedding, and vector storage
+- Act as the backend version of the indexing pipeline controller
+
+### 11.8 `ingest_knowledge_base.py`
+
+Responsibilities:
+
+- Run the knowledge indexing pipeline from a script
+- Run whenever official source pages, Markdown seed content, or indexed source material changes
 
 Run:
 
@@ -802,19 +857,54 @@ python scripts/ingest_knowledge_base.py
 Successful output should look like:
 
 ```text
-Loaded 6 markdown files
-Created 42 chunks
+Loaded 6 source documents
+Normalized 6 documents
+Created 42 semantic chunks
 Embedded 42 chunks
 Upserted 42 vectors into Qdrant
 ```
 
-### 11.6 Commit
+### 11.9 Commit
 
 ```bash
-git add backend/app/services backend/app/utils backend/scripts
-git commit -m "Add RAG ingestion pipeline"
+git add backend/app/loaders backend/app/processors backend/app/services backend/scripts
+git commit -m "Add semantic indexing pipeline"
 git push origin main
 ```
+
+## 11A. Step 7A: Implement the User Query Pipeline
+
+The user query pipeline runs when a user asks a Prepare question or uses Live Assist.
+
+Target flow:
+
+```text
+User question / transcript
+    ↓
+Shared Context
+    ↓
+Query rewriting
+    ↓
+Query embedding
+    ↓
+Qdrant semantic retrieval
+    ↓
+Safety layer
+    ↓
+LLM response
+```
+
+Recommended services:
+
+```text
+query_rewriter_service.py
+rag_service.py
+safety_service.py
+llm_service.py
+context_service.py
+```
+
+RAG belongs in this user query pipeline because it starts from the user input, retrieves relevant indexed chunks, and passes those chunks to the LLM.
 
 ## 12. Step 8: Implement the Prepare API
 
@@ -1254,7 +1344,8 @@ docker compose up --build
 
 Write at least these tests:
 
-- Markdown loader can read files
+- Markdown loader can read seed/fallback files
+- Web loader can ingest allowed official source pages
 - Chunker can split text into chunks
 - Context service can save and retrieve context
 - Prepare API returns `visit_context_id`
@@ -1388,21 +1479,27 @@ The GitHub repository should be understandable at first glance.
 ### 20.2 Recommended README Architecture Diagram
 
 ```text
+Indexing Pipeline
+Trusted Ontario web sources / Markdown seed knowledge
+    ↓
+Loader + Extractor + Structure Normalizer
+    ↓
+Semantic Chunker + AI Embeddings
+    ↓
+Qdrant Vector DB
+
+User Query Pipeline
 React Frontend
     ↓
 FastAPI Backend
     ↓
-Context Service
+Shared Context + Query Rewriter
     ↓
-RAG Service
+Semantic RAG Retriever
     ↓
-Qdrant Vector DB
+Safety Layer
     ↓
-Markdown Knowledge Base
-
-FastAPI Backend
-    ↓
-OpenAI APIs
+LLM Response
 ```
 
 ### 20.3 Recommended Screenshots
@@ -1461,26 +1558,29 @@ Do not build everything at once. Recommended order:
 
 1. GitHub repo + README
 2. PRD + SDD
-3. Knowledge base Markdown
+3. Knowledge source registry and Markdown seed files
 4. Backend skeleton
-5. Qdrant Docker
-6. Markdown loader
-7. Chunking
-8. Embeddings
-9. Qdrant ingestion
-10. RAG search endpoint
-11. Prepare API
-12. Shared Context
-13. Live Assist API
-14. Frontend Prepare page
-15. Frontend Live Assist page
-16. Basic styling
-17. Speech-to-text
-18. Docker Compose
-19. Tests
-20. README polish
-21. Screenshots
-22. Demo script
+5. Markdown loader and web source plan
+6. Mock embedding scaffold
+7. Semantic indexing service
+8. Semantic chunking and metadata augmentation
+9. OpenAI embeddings
+10. Qdrant Docker
+11. Qdrant ingestion
+12. User query pipeline
+13. RAG search endpoint
+14. Prepare API
+15. Shared Context
+16. Live Assist API
+17. Frontend Prepare page
+18. Frontend Live Assist page
+19. Basic styling
+20. Speech-to-text
+21. Docker Compose
+22. Tests
+23. README polish
+24. Screenshots
+25. Demo script
 
 ## 22. Step 18: What Not to Build in Version 1
 
@@ -1510,9 +1610,11 @@ The fastest presentable version should include:
 
 - Complete README
 - Complete PRD / SDD
-- Six Markdown knowledge sources
+- Six Markdown seed knowledge files
+- Source registry for official web pages
 - Qdrant can start
-- Ingestion script can store Markdown in Qdrant
+- Semantic indexing pipeline can store chunks in Qdrant
+- User query pipeline can retrieve relevant chunks
 - Prepare API can return a visit brief
 - Live Assist API can reuse `visit_context_id`
 - React has two pages
@@ -1535,11 +1637,13 @@ Goal:
 
 Goal:
 
-- Markdown sources completed
-- Chunking completed
-- Embedding completed
+- Markdown seed sources completed
+- Official web source registry started
+- Semantic chunking completed
+- AI embedding service completed
 - Qdrant ingestion completed
-- RAG search works
+- User query pipeline retrieves relevant chunks
+- RAG search works with metadata and source references
 
 ### Milestone 3: Backend MVP
 
@@ -1594,5 +1698,4 @@ Docker:
 
 The technical implementation path for Harbor AI should be:
 
-> First build a trusted Markdown knowledge base, then use embeddings and Qdrant for RAG, then provide Prepare and Live Assist APIs through FastAPI, and finally build two React pages where Shared Context generated in Prepare is reused in Live Assist.
-
+> First build a trusted Ontario knowledge index with semantic chunking, AI embeddings, and Qdrant, then implement the user query pipeline for RAG, safety-aware LLM responses, Prepare, Live Assist, and Shared Context.

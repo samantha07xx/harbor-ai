@@ -1,7 +1,7 @@
 # Harbor AI PRD
 
-Version: v1.0  
-Date: 2026-07-09  
+Version: v1.1  
+Date: 2026-07-13  
 Project Type: GitHub Portfolio / AI Product Demo  
 Target Region: Ontario, Canada  
 MVP Scope: Non-emergency Primary Care Communication
@@ -29,6 +29,8 @@ Common problems include:
 - Forgetting important questions during the visit.
 
 Harbor AI creates value by connecting preparation with real-time support. The visit context created during the Prepare flow is reused during Live Assist, allowing the AI to understand the user’s current healthcare interaction instead of responding as a generic chatbot.
+
+The product should be designed around a mature AI workflow, not a single chatbot interaction. Harbor AI uses an indexing pipeline to prepare trusted Ontario healthcare knowledge, and a user query pipeline to retrieve that knowledge, combine it with Shared Context, and generate safe communication support.
 
 ## 3. Target Users
 
@@ -201,9 +203,9 @@ The key idea is not simply RAG. The project demonstrates Context Engineering: AI
 
 ## 9. Source / Knowledge Base Format
 
-The MVP uses curated Markdown documents as the knowledge source.
+The target knowledge source strategy is hybrid, with official Ontario web pages as the primary trusted source input and curated Markdown as seed knowledge, fallback content, and a GitHub-readable source snapshot.
 
-Harbor AI does not scrape websites at runtime. Instead, official or trusted healthcare information is manually curated into structured Markdown files. These files are then chunked, embedded, and stored for vector retrieval.
+Harbor AI should not perform live open web search during every user question. Instead, official or trusted healthcare pages should be ingested through a controlled indexing pipeline. Curated Markdown files remain useful for local development, reviewability, and portfolio presentation.
 
 Recommended structure:
 
@@ -211,21 +213,15 @@ Recommended structure:
 knowledge_base/
   ontario/
     primary_care/
-      walk_in_clinic.md
-      family_doctor.md
-      nurse_practitioner.md
-      health811.md
+      care_options.md
+      finding_primary_care.md
     insurance/
       ohip_basics.md
-      without_ohip.md
     visit_preparation/
-      appointment_checklist.md
-      symptoms_description.md
-      questions_to_ask.md
-      after_visit_instructions.md
+      visit_checklist.md
+      symptom_communication.md
     safety/
-      emergency_vs_primary_care.md
-      when_to_call_911.md
+      emergency_and_ai_limits.md
 ```
 
 Each Markdown file should use a consistent structure:
@@ -251,23 +247,23 @@ Each Markdown file should use a consistent structure:
 - Source name: URL
 ```
 
-RAG pipeline:
+Target knowledge indexing pipeline:
 
 ```text
-Official Websites
+Official Ontario Web Sources
     ↓
-Curated Markdown
+Curated Markdown / Web Source Loader
     ↓
-Chunking
+Text Extraction and Structure Normalization
     ↓
-Embedding
+Semantic Chunking and Metadata Augmentation
+    ↓
+AI Embeddings
     ↓
 Qdrant Vector Database
-    ↓
-Retrieval
-    ↓
-LLM Response
 ```
+
+The MVP should not depend on live web scraping at user query time. Official web sources should be used as controlled source inputs for the indexing pipeline, and user-facing responses should retrieve from the prepared knowledge index.
 
 ## 10. Official Source Websites
 
@@ -293,16 +289,40 @@ Supporting sources:
 Source principles:
 
 - Prioritize Ontario government and official healthcare organization pages.
-- Keep source URLs inside each Markdown source file.
+- Keep source URLs in source records, Markdown snapshots, and chunk metadata.
 - Do not treat AI-generated text as knowledge base source material.
 - Do not use private clinic marketing pages as core factual sources.
-- If official information changes, update the Markdown files and regenerate embeddings.
+- If official information changes, rerun the ingestion pipeline and regenerate embeddings.
 
 ## 11. AI Architecture
 
-Harbor AI contains four AI modules.
+Harbor AI contains two AI pipelines and several supporting AI modules.
 
-### 11.1 LLM
+### 11.1 Indexing Pipeline
+
+Responsibilities:
+
+- Load curated Markdown and trusted Ontario web source text
+- Extract useful body content from source material
+- Normalize document structure into titles, sections, metadata, and sources
+- Create semantic chunks that preserve complete healthcare communication topics
+- Generate AI embeddings for each chunk
+- Store chunk text, metadata, and vectors in Qdrant
+
+### 11.2 User Query Pipeline
+
+Responsibilities:
+
+- Accept a Prepare question, Live Assist transcript, or user text input
+- Combine the current input with Shared Context when available
+- Rewrite or clarify the query when useful
+- Retrieve relevant chunks from Qdrant
+- Apply safety boundaries
+- Generate a clear, source-grounded response with the LLM
+
+RAG belongs primarily to this user query pipeline because it starts from the user’s current question and retrieves relevant indexed knowledge.
+
+### 11.3 LLM
 
 Responsibilities:
 
@@ -311,23 +331,25 @@ Responsibilities:
 - Generate follow-up questions
 - Summarize clinician instructions
 - Translate and explain healthcare terminology
+- Use retrieved chunks and Shared Context to produce safety-aware communication support
 
-### 11.2 RAG
+### 11.4 RAG
 
 Responsibilities:
 
 - Retrieve Ontario primary care knowledge
 - Support Prepare checklists and explanations
 - Support Live Assist healthcare navigation answers
+- Connect user questions to semantically relevant indexed chunks
 
-### 11.3 Speech AI
+### 11.5 Speech AI
 
 Responsibilities:
 
 - Transcribe user speech or short conversation segments
 - Provide input for Live Assist
 
-### 11.4 Vision AI
+### 11.6 Vision AI
 
 Optional for MVP.
 
@@ -342,21 +364,29 @@ Vision AI is not a core success requirement for the MVP.
 ## 12. Technical Architecture
 
 ```text
+Indexing Pipeline
+Official Ontario Sources / Markdown
+        ↓
+Loader + Extractor + Structure Normalizer
+        ↓
+Semantic Chunker + Metadata Augmentation
+        ↓
+AI Embedding Service
+        ↓
+Qdrant Vector Database
+
+User Query Pipeline
 React + TypeScript Frontend
         ↓
 FastAPI Backend
         ↓
-Context Service
+Shared Context + Query Rewriter
         ↓
-AI Orchestration Layer
+Semantic Retriever
         ↓
-OpenAI APIs
+Safety Layer
         ↓
-Qdrant Vector Database
-        ↓
-Markdown Knowledge Base
-        ↓
-Docker Compose
+LLM Response
 ```
 
 Main components:
@@ -365,7 +395,8 @@ Main components:
 - Backend: FastAPI
 - AI APIs: OpenAI GPT, speech-to-text, embeddings
 - Vector Database: Qdrant
-- Knowledge Base: Markdown files
+- Knowledge Base: Official Ontario web sources plus curated Markdown seed/fallback snapshots
+- Processing: Extraction, structure normalization, semantic chunking, metadata augmentation
 - Deployment: Docker Compose
 
 ## 13. Data and Privacy Principles
@@ -432,8 +463,13 @@ Live Assist:
 
 - Prepare page
 - Live Assist page
-- Markdown knowledge base
-- RAG pipeline
+- Official web-source based knowledge index
+- Curated Markdown seed/fallback knowledge
+- Indexing Pipeline
+- User Query Pipeline
+- Semantic chunking
+- AI embeddings
+- Qdrant vector retrieval
 - Shared Context
 - Text input
 - Basic speech-to-text
@@ -469,7 +505,7 @@ Live Assist:
 
 ## 18. Final MVP Definition
 
-Harbor AI MVP is an AI healthcare communication assistant for newcomers in Ontario. It uses a curated Markdown knowledge base, RAG, LLM, Speech AI, and Shared Context to help users prepare for and complete non-emergency primary care communication.
+Harbor AI MVP is an AI healthcare communication assistant for newcomers in Ontario. It uses curated Ontario knowledge sources, semantic indexing, AI embeddings, Qdrant retrieval, RAG, LLM, Speech AI, and Shared Context to help users prepare for and complete non-emergency primary care communication.
 
 The MVP focuses on two scenarios:
 
@@ -478,5 +514,4 @@ The MVP focuses on two scenarios:
 
 Core product insight:
 
-> Prepare generates the context. Live Assist reuses the context. RAG provides trusted healthcare navigation knowledge. LLM turns that knowledge into communication support.
-
+> Prepare generates the context. Live Assist reuses the context. The Indexing Pipeline prepares trusted healthcare knowledge. The User Query Pipeline retrieves relevant knowledge and uses the LLM to turn it into safe communication support.
