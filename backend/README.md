@@ -2,7 +2,7 @@
 
 Backend: Python, FastAPI, and Pydantic.
 
-Current status: Step 27 golden-question evaluation.
+Current status: Step 28 ingestion dry-run CLI.
 
 Implemented:
 
@@ -33,6 +33,7 @@ Implemented:
 - Agent-facing healthcare retrieval tool boundary
 - Deterministic pre-LLM agent orchestrator
 - Golden-question evaluation runner
+- Ingestion dry-run CLI for fetch/extract/chunk/embed/index preview
 
 Not implemented yet:
 
@@ -79,3 +80,11 @@ Local evaluation:
 ```bash
 python -m app.evaluation.run_eval
 ```
+
+Ingestion dry-run:
+
+```bash
+python -m app.ingestion.cli --url https://www.ontario.ca/page/apply-ohip-and-get-health-card
+```
+
+For fully offline testing, pass `--fixture-html path/to/page.html`.

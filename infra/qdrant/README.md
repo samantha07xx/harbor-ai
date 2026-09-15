@@ -48,3 +48,5 @@ Step 25 adds an agent-facing retrieval tool boundary over the local retrieval pa
 Step 26 routes chat through a deterministic pre-LLM agent orchestrator. It still does not require Docker.
 
 Step 27 adds golden-question evaluation for the deterministic local chat path. It still does not require Docker.
+
+Step 28 adds an ingestion dry-run CLI that previews Qdrant-ready points without writing to Qdrant. It still does not require Docker.

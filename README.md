@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 27: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, embedding and vector-store boundaries, retrieval over a vector store, deterministic query rewrite, a rewrite-plus-retrieval composition service, a local retrieval testing API endpoint, deterministic cited answer drafting, a pre-agent local RAG chat response, a lightweight safety/scope response layer, an agent-facing healthcare retrieval tool boundary, a deterministic pre-LLM agent orchestrator, and golden-question evaluation. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, ingestion pipeline pieces, Qdrant-ready point mapping, dry-run indexing, vector-store-backed indexing, query embedding plus vector search result mapping, a lightweight query rewrite service, a composed retrieval entrypoint for later agent use, a small local demo retrieval fixture for endpoint testing, a conservative answer composer that formats retrieved chunks with citations, deterministic routing for emergency and clearly out-of-scope questions, a stable tool interface the future agent can call, a chat endpoint routed through the deterministic agent, and a local eval runner for deterministic chat behavior. Recursive crawling, external embedding API calls, production Qdrant collection management, and LLM-based agent reasoning are intentionally not implemented yet.
+This repository is currently at Step 28: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, embedding and vector-store boundaries, retrieval over a vector store, deterministic query rewrite, a rewrite-plus-retrieval composition service, a local retrieval testing API endpoint, deterministic cited answer drafting, a pre-agent local RAG chat response, a lightweight safety/scope response layer, an agent-facing healthcare retrieval tool boundary, a deterministic pre-LLM agent orchestrator, golden-question evaluation, and an ingestion dry-run CLI. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, ingestion pipeline pieces, Qdrant-ready point mapping, dry-run indexing, vector-store-backed indexing, query embedding plus vector search result mapping, a lightweight query rewrite service, a composed retrieval entrypoint for later agent use, a small local demo retrieval fixture for endpoint testing, a conservative answer composer that formats retrieved chunks with citations, deterministic routing for emergency and clearly out-of-scope questions, a stable tool interface the future agent can call, a chat endpoint routed through the deterministic agent, a local eval runner for deterministic chat behavior, and a CLI for previewing ingestion artifacts without Qdrant writes. Recursive crawling, external embedding API calls, production Qdrant collection management, and LLM-based agent reasoning are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -70,6 +70,7 @@ Completed:
 - Agent-facing healthcare retrieval tool boundary
 - Deterministic pre-LLM agent orchestrator
 - Golden-question evaluation runner
+- Ingestion dry-run CLI for fetch/extract/chunk/embed/index preview
 
 Not implemented yet:
 
@@ -82,4 +83,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 28 should add an ingestion CLI dry-run command for fetch, extract, chunk, embed, and index preview.
+Step 29 should tighten the frontend demo experience and make the local/pre-agent status visible in the UI.
