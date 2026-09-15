@@ -5,7 +5,7 @@ from typing import Protocol
 
 import httpx
 
-ANSWER_MAX_OUTPUT_TOKENS = 260
+ANSWER_MAX_OUTPUT_TOKENS = 360
 
 
 @dataclass(frozen=True)
@@ -92,12 +92,10 @@ GROUNDED_ANSWER_SYSTEM_PROMPT = (
     "You are Harbor, an Ontario healthcare navigation assistant. "
     "Answer only from the trusted source material provided in the prompt. Do not diagnose, "
     "prescribe, or invent facts. Give the user a direct, practical answer in no more than "
-    "three short sections. Format each section as a short heading on its own line, followed "
-    "by one bullet on the next line. Do not put the heading and explanation on the same "
-    "line with a colon. Include citation markers like [1] for factual claims. Do not "
-    "mention internal words like excerpts, chunks, retrieval, supplied material, or RAG. "
-    "If the evidence is incomplete, briefly say what is missing and point the user to the "
-    "cited official source."
+    "four concise bullets. Use clear labels in the same line, such as '- How to apply: ...'. "
+    "Include citation markers like [1] for factual claims. Do not mention internal words "
+    "like excerpts, chunks, retrieval, supplied material, or RAG. If the evidence is "
+    "incomplete, briefly say what is missing and point the user to the cited official source."
 )
 
 
@@ -112,10 +110,6 @@ def build_grounded_answer_prompt(request: LLMAnswerRequest) -> str:
             "",
             "Trusted source excerpts:",
             evidence,
-            "",
-            "Use this exact shape:",
-            "Short heading",
-            "- One concise explanation with citations.",
             "",
             "Write a concise user-facing answer for someone navigating healthcare in Ontario.",
         ]

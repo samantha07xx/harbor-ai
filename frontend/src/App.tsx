@@ -19,95 +19,12 @@ const initialMessages: ChatMessage[] = [
   },
 ];
 
-function metadataLabel(value: unknown): string | null {
-  if (typeof value !== "string" || value.length === 0) {
-    return null;
+function shouldShowCitations(message: ChatMessage): boolean {
+  if (message.citations.length === 0) {
+    return false;
   }
 
-  return value
-    .split("_")
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-}
-
-function statusBadges(metadata?: Record<string, unknown>): string[] {
-  if (!metadata) {
-    return [];
-  }
-
-  const badges: string[] = [];
-  const status = metadata.implementation_status;
-  const agentMode = metadata.agent_mode;
-  const plannerRoute = metadata.planner_route;
-  const safetyRoute = metadata.safety_route;
-  const intent = metadata.detected_intent;
-  const toolName = metadata.tool_name;
-  const corpusMode = metadata.retrieval_corpus_mode;
-  const answerMode = metadata.answer_mode;
-
-  if (status === "deterministic_agent_safety") {
-    badges.push("Safety");
-  } else if (status === "deterministic_agent_local_rag") {
-    badges.push("Local RAG");
-  } else if (status === "openai_agent_tool_rag") {
-    badges.push("Agent RAG");
-  } else if (status === "openai_rate_limited") {
-    badges.push("OpenAI rate limit");
-  }
-
-  const agentLabel = metadataLabel(agentMode);
-  if (agentLabel === "Openai React Planner") {
-    badges.push("ReAct Planner");
-  }
-
-  const plannerLabel = metadataLabel(plannerRoute);
-  if (plannerLabel) {
-    badges.push(plannerLabel);
-  }
-
-  const routeLabel = metadataLabel(safetyRoute);
-  if (routeLabel && routeLabel !== "Proceed") {
-    badges.push(routeLabel);
-  }
-
-  const intentLabel = metadataLabel(intent);
-  if (intentLabel) {
-    badges.push(intentLabel);
-  }
-
-  const toolLabel = metadataLabel(toolName);
-  if (toolLabel) {
-    badges.push(toolLabel);
-  }
-
-  const corpusLabel = metadataLabel(corpusMode);
-  if (corpusLabel) {
-    badges.push(corpusLabel);
-  }
-
-  const answerLabel = metadataLabel(answerMode);
-  if (answerLabel) {
-    badges.push(answerLabel);
-  }
-
-  return badges;
-}
-
-function MetadataBadges({ metadata }: { metadata?: Record<string, unknown> }) {
-  const badges = statusBadges(metadata);
-
-  if (badges.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="metadata-badges" aria-label="Response metadata">
-      {badges.map((badge) => (
-        <span key={badge}>{badge}</span>
-      ))}
-    </div>
-  );
+  return message.metadata?.detected_intent === "ohip_application";
 }
 
 export function App() {
@@ -205,9 +122,7 @@ export function App() {
               <div className="message-label">{message.role === "assistant" ? "Harbor" : "You"}</div>
               <p>{message.content}</p>
 
-              {message.role === "assistant" && <MetadataBadges metadata={message.metadata} />}
-
-              {message.citations.length > 0 && (
+              {shouldShowCitations(message) && (
                 <ul className="citation-list" aria-label="Sources">
                   {message.citations.map((citation) => (
                     <li key={citation.url}>
