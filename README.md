@@ -33,7 +33,7 @@ docker compose up -d qdrant
 curl http://localhost:6333/healthz
 ```
 
-Index trusted pages with OpenAI embeddings, then start the backend:
+Index the starter OHIP source with OpenAI embeddings, then start the backend:
 
 ```bash
 cd /Users/samantha/Documents/Codex/2026-09-15/harbor-ai-repo/backend
@@ -43,7 +43,11 @@ export OPENAI_API_KEY="your_api_key_here"
 export HARBOR_EMBEDDING_PROVIDER=openai
 export HARBOR_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 export HARBOR_QDRANT_COLLECTION=harbor_healthcare_chunks_openai
-python -m app.ingestion.cli --write-to-qdrant --default-live-urls
+python -m app.ingestion.cli \
+  --write-to-qdrant \
+  --url https://www.ontario.ca/page/apply-ohip-and-get-health-card \
+  --target-token-count 1200 \
+  --overlap-token-count 0
 export HARBOR_AGENT_PROVIDER=openai
 export HARBOR_ANSWER_PROVIDER=openai
 export HARBOR_LLM_MODEL=gpt-5-mini
@@ -65,9 +69,9 @@ http://127.0.0.1:5173
 
 Try:
 
+- `How do I apply for OHIP?`
 - `What can you help me with?`
 - `Can I call someone if it is not an emergency?`
-- `How do I get a health card?`
 - `I just landed and need a doctor. What can I do?`
 - `What is the weather tomorrow?`
 
