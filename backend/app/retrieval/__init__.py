@@ -20,6 +20,12 @@ from app.retrieval.qdrant_client import (
     map_chunk_to_qdrant_point,
     map_chunks_to_qdrant_points,
 )
+from app.retrieval.query_rewrite import (
+    QueryIntent,
+    QueryRewriteResult,
+    QueryRewriteService,
+    RewriteRule,
+)
 from app.retrieval.service import RetrievalService, map_search_hit_to_retrieval_hit
 
 __all__ = [
@@ -32,7 +38,11 @@ __all__ = [
     "QdrantPoint",
     "QdrantSearchHit",
     "QdrantVectorStore",
+    "QueryIntent",
+    "QueryRewriteResult",
+    "QueryRewriteService",
     "RetrievalService",
+    "RewriteRule",
     "VectorStore",
     "chunk_payload",
     "cosine_similarity",

@@ -24,11 +24,11 @@ Implemented:
 - Live Qdrant vector store interface with test doubles
 - Indexing service that upserts through the vector store boundary
 - Retrieval service for query embedding and vector search
+- Lightweight deterministic query rewrite service
 
 Not implemented yet:
 
 - Agent loop
-- Query rewrite
 - External embedding API calls
 - Live Qdrant-backed retrieval verification
 - Recursive crawling
