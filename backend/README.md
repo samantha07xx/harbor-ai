@@ -10,6 +10,7 @@ Implemented:
 - `GET /health`
 - Placeholder `POST /api/chat`
 - Environment-backed settings
+- Core trusted source and chunk schemas
 
 Not implemented yet:
 
