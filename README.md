@@ -1,87 +1,95 @@
 # Harbor
 
-Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
+Harbor is a local demo of an AI-assisted Ontario healthcare navigation app for newcomers. It provides a web chat UI backed by a deterministic pre-LLM agent, source-grounded retrieval fixtures, citations, safety/scope routing, ingestion dry-runs, and golden-question evaluation.
 
-This repository is currently at Step 29: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, embedding and vector-store boundaries, retrieval over a vector store, deterministic query rewrite, a rewrite-plus-retrieval composition service, a local retrieval testing API endpoint, deterministic cited answer drafting, a pre-agent local RAG chat response, a lightweight safety/scope response layer, an agent-facing healthcare retrieval tool boundary, a deterministic pre-LLM agent orchestrator, golden-question evaluation, an ingestion dry-run CLI, and clearer frontend demo status. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, ingestion pipeline pieces, Qdrant-ready point mapping, dry-run indexing, vector-store-backed indexing, query embedding plus vector search result mapping, a lightweight query rewrite service, a composed retrieval entrypoint for later agent use, a small local demo retrieval fixture for endpoint testing, a conservative answer composer that formats retrieved chunks with citations, deterministic routing for emergency and clearly out-of-scope questions, a stable tool interface the future agent can call, a chat endpoint routed through the deterministic agent, a local eval runner for deterministic chat behavior, a CLI for previewing ingestion artifacts without Qdrant writes, and frontend badges for local/pre-LLM status and response metadata. Recursive crawling, external embedding API calls, production Qdrant collection management, and LLM-based agent reasoning are intentionally not implemented yet.
+The original design baseline lives in `docs/harbor_project_documentation.md`. The current implemented state is summarized in `docs/current_state.md`.
 
-## Design Baseline
+## What Works Now
 
-The source design document is kept at:
+- React/Vite chat UI at `http://127.0.0.1:5173`
+- FastAPI backend at `http://127.0.0.1:8000`
+- Deterministic pre-LLM agent for local demo behavior
+- Safety/scope routing for emergency and clearly out-of-scope questions
+- Local demo retrieval index with cited answers
+- Trusted source registry and URL allowlist checks
+- One-page fetch, extraction, chunking, embedding, and Qdrant-point preview
+- Golden-question evaluation for deterministic chat behavior
 
-- `docs/harbor_project_documentation.md`
+## Run The Demo
 
-Build decisions should follow that document unless a later commit updates the architecture.
+Start the backend:
 
-## Planned Stack
-
-- Frontend: React with TypeScript
-- Backend: Python with FastAPI and Pydantic
-- Agent/RAG: lightweight ReAct loop or LangGraph later
-- Vector database: Qdrant
-- Ingestion: allowlist crawler, content extraction, metadata-aware chunking, embeddings
-- Evaluation: small golden question set and retrieval/citation checks
-
-## Current Structure
-
-```text
-docs/       Project documentation and architecture notes
-frontend/   Planned web chat UI
-backend/    Planned FastAPI service and RAG modules
-infra/      Planned local infrastructure such as Qdrant
-tests/      Planned backend, retrieval, and ingestion tests
+```bash
+cd backend
+source .venv/bin/activate
+uvicorn app.main:app --reload
 ```
 
-## Current Status
+Start the frontend in a second terminal:
 
-Completed:
+```bash
+cd frontend
+npm run dev
+```
 
-- Clean Harbor repository structure
-- Design document copied into `docs/`
-- Minimal backend, frontend, infra, and test placeholders
-- Environment variable example file
-- Git ignore rules for local development artifacts
-- Runnable FastAPI app skeleton
-- `GET /health`
-- Pre-agent local RAG `POST /api/chat`
-- Runnable React/Vite chat shell
-- Frontend API client for backend chat requests
-- Local Qdrant Docker Compose service
-- Planned Qdrant collection configuration notes
-- Core trusted source, source page, chunk, citation, and retrieval result schemas
-- First trusted source registry and loader
-- Crawler interface with URL allowlist decisions
-- Fetch-free HTML extraction contract and tests
-- Guarded single-page HTML fetch with tests
-- Single-page fetch-and-extract ingestion service
-- Metadata-aware chunking for extracted pages
-- Single-page fetch-extract-chunk ingestion service
-- Embedding service interface and deterministic test provider
-- Qdrant point mapping for embedded chunks
-- Dry-run indexing pipeline for one approved page
-- Qdrant vector store interface and in-memory test double
-- Indexing service that upserts through the vector store boundary
-- Retrieval service for query embedding and vector search
-- Lightweight deterministic query rewrite service
-- Rewrite-plus-retrieval composition service
-- Local retrieval testing API endpoint
-- Deterministic cited answer composer
-- Chat endpoint wired to local retrieval and cited draft answers
-- Lightweight emergency and out-of-scope safety response layer
-- Agent-facing healthcare retrieval tool boundary
-- Deterministic pre-LLM agent orchestrator
-- Golden-question evaluation runner
-- Ingestion dry-run CLI for fetch/extract/chunk/embed/index preview
-- Frontend local demo status and response metadata badges
+Open:
 
-Not implemented yet:
+```text
+http://127.0.0.1:5173
+```
 
-- Full agentic backend chat API
-- Live Qdrant runtime verification
-- Recursive crawling
-- External embedding API calls
-- LLM-based agent loop
-- LLM-based grounded answer generation
+Try:
 
-## Next Step
+- `Can I call someone if it is not an emergency?`
+- `How do I get a health card?`
+- `I just landed and need a doctor. What can I do?`
+- `What is the weather tomorrow?`
 
-Step 30 should add final project documentation for running, demoing, and understanding current limitations.
+## Useful Commands
+
+Run backend tests:
+
+```bash
+cd backend
+.venv/bin/pytest
+.venv/bin/ruff check . ../tests/backend ../tests/ingestion ../tests/retrieval
+```
+
+Run frontend build:
+
+```bash
+cd frontend
+npm run build
+```
+
+Run deterministic evaluation:
+
+```bash
+cd backend
+python -m app.evaluation.run_eval
+```
+
+Run ingestion dry-run:
+
+```bash
+cd backend
+python -m app.ingestion.cli --url https://www.ontario.ca/page/apply-ohip-and-get-health-card
+```
+
+## Current Limits
+
+- No production Qdrant collection is required or populated yet.
+- No external embedding API or LLM API is called.
+- The chat answer path uses a tiny local demo retrieval fixture, not a full crawled corpus.
+- The agent is deterministic and pre-LLM; it is shaped like an agent boundary but does not reason with a model.
+- The ingestion pipeline is single-page and dry-run oriented. It does not recursively crawl sites.
+
+## Repo Map
+
+```text
+backend/   FastAPI app, deterministic agent, retrieval, ingestion, evaluation
+frontend/  React/Vite chat UI
+docs/      Design baseline, current state, architecture, evaluation notes
+infra/     Local Qdrant scaffold
+tests/     Backend, ingestion, and retrieval tests
+```

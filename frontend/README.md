@@ -2,7 +2,7 @@
 
 Frontend: React, TypeScript, and Vite.
 
-Current status: Step 29 chat shell connected to the deterministic local demo backend.
+Current status: chat shell connected to the deterministic local demo backend.
 
 Implemented:
 

@@ -2,7 +2,7 @@
 
 Backend: Python, FastAPI, and Pydantic.
 
-Current status: Step 28 ingestion dry-run CLI.
+Current status: local deterministic Harbor backend demo.
 
 Implemented:
 
