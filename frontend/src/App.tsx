@@ -219,16 +219,6 @@ export function App() {
                   ))}
                 </ul>
               )}
-
-              {message.suggestedFollowups && message.suggestedFollowups.length > 0 && (
-                <div className="followups" aria-label="Suggested follow-up questions">
-                  {message.suggestedFollowups.map((followup) => (
-                    <button type="button" key={followup} onClick={() => usePrompt(followup)}>
-                      {followup}
-                    </button>
-                  ))}
-                </div>
-              )}
             </article>
           ))}
 
