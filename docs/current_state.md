@@ -22,6 +22,7 @@ Harbor is currently a local MVP/demo, not a production healthcare product.
 - Agent-facing healthcare retrieval tool.
 - Query rewrite, deterministic embeddings, in-memory vector search, and cited draft answer composition.
 - Local demo retrieval fixture for Health811, OHIP, newcomers, and emergency care.
+- Optional live-ingested local retrieval mode from allowlisted Ontario healthcare pages.
 
 ### Ingestion
 
@@ -63,9 +64,21 @@ Frontend chat
   -> HealthcareRetrievalTool
   -> QueryRewriteService
   -> Deterministic embedding
-  -> In-memory vector search over demo chunks
+  -> In-memory vector search over demo chunks or live-ingested chunks
   -> AnswerComposer
   -> ChatResponse with citations and metadata
+```
+
+Default mode uses the local demo fixture:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Live ingestion mode fetches allowlisted pages and builds an in-memory index before answering:
+
+```bash
+HARBOR_RETRIEVAL_MODE=live uvicorn app.main:app --reload
 ```
 
 ## Demo Questions

@@ -60,6 +60,7 @@ def get_local_demo_rewritten_retrieval_service() -> RewrittenRetrievalService:
             embedding_service=embedding_service,
             vector_store=store,
         ),
+        corpus_mode="demo_fixture",
     )
 
 

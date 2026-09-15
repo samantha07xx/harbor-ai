@@ -8,6 +8,12 @@ from app.retrieval.embeddings import (
     EmbeddingService,
     format_chunk_for_embedding,
 )
+from app.retrieval.live import (
+    LiveIngestionRetrievalError,
+    build_live_ingested_rewritten_retrieval_service,
+    get_live_ingested_rewritten_retrieval_service,
+    get_live_or_demo_rewritten_retrieval_service,
+)
 from app.retrieval.qdrant_client import (
     InMemoryVectorStore,
     QdrantPoint,
@@ -40,6 +46,7 @@ __all__ = [
     "EmbeddingResult",
     "EmbeddingService",
     "InMemoryVectorStore",
+    "LiveIngestionRetrievalError",
     "QdrantPoint",
     "QdrantSearchHit",
     "QdrantVectorStore",
@@ -51,9 +58,12 @@ __all__ = [
     "RewrittenRetrievalResult",
     "RewrittenRetrievalService",
     "VectorStore",
+    "build_live_ingested_rewritten_retrieval_service",
     "chunk_payload",
     "cosine_similarity",
     "format_chunk_for_embedding",
+    "get_live_ingested_rewritten_retrieval_service",
+    "get_live_or_demo_rewritten_retrieval_service",
     "make_qdrant_point_id",
     "map_chunk_to_qdrant_point",
     "map_chunks_to_qdrant_points",

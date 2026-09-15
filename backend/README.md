@@ -27,6 +27,7 @@ Implemented:
 - Lightweight deterministic query rewrite service
 - Rewrite-plus-retrieval composition service
 - Local `POST /api/retrieval/search` endpoint backed by a demo in-memory index
+- Optional `HARBOR_RETRIEVAL_MODE=live` mode backed by live allowlisted page ingestion
 - Deterministic cited answer composer for retrieved chunks
 - Chat endpoint wired to local retrieval and cited draft answers
 - Lightweight emergency and out-of-scope safety response layer
@@ -52,6 +53,12 @@ python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e ".[dev]"
 uvicorn app.main:app --reload
+```
+
+Run with live allowlisted page ingestion:
+
+```bash
+HARBOR_RETRIEVAL_MODE=live uvicorn app.main:app --reload
 ```
 
 Then visit:

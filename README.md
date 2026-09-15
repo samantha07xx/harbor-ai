@@ -1,6 +1,6 @@
 # Harbor
 
-Harbor is a local demo of an AI-assisted Ontario healthcare navigation app for newcomers. It provides a web chat UI backed by a deterministic pre-LLM agent, source-grounded retrieval fixtures, citations, safety/scope routing, ingestion dry-runs, and golden-question evaluation.
+Harbor is a local demo of an AI-assisted Ontario healthcare navigation app for newcomers. It provides a web chat UI backed by a deterministic pre-LLM agent, source-grounded retrieval, citations, safety/scope routing, live allowlisted ingestion mode, ingestion dry-runs, and golden-question evaluation.
 
 The original design baseline lives in `docs/harbor_project_documentation.md`. The current implemented state is summarized in `docs/current_state.md`.
 
@@ -11,6 +11,7 @@ The original design baseline lives in `docs/harbor_project_documentation.md`. Th
 - Deterministic pre-LLM agent for local demo behavior
 - Safety/scope routing for emergency and clearly out-of-scope questions
 - Local demo retrieval index with cited answers
+- Optional live-ingested retrieval mode from allowlisted Ontario healthcare pages
 - Trusted source registry and URL allowlist checks
 - One-page fetch, extraction, chunking, embedding, and Qdrant-point preview
 - Golden-question evaluation for deterministic chat behavior
@@ -23,6 +24,14 @@ Start the backend:
 cd backend
 source .venv/bin/activate
 uvicorn app.main:app --reload
+```
+
+To use real allowlisted web pages instead of the hand-written demo fixture:
+
+```bash
+cd backend
+source .venv/bin/activate
+HARBOR_RETRIEVAL_MODE=live uvicorn app.main:app --reload
 ```
 
 Start the frontend in a second terminal:
@@ -80,7 +89,8 @@ python -m app.ingestion.cli --url https://www.ontario.ca/page/apply-ohip-and-get
 
 - No production Qdrant collection is required or populated yet.
 - No external embedding API or LLM API is called.
-- The chat answer path uses a tiny local demo retrieval fixture, not a full crawled corpus.
+- By default, chat uses a tiny local demo retrieval fixture. Set `HARBOR_RETRIEVAL_MODE=live` to build an in-memory index from real allowlisted pages at startup.
+- Live mode is still local and deterministic. It does not use Qdrant, external embeddings, or an LLM.
 - The agent is deterministic and pre-LLM; it is shaped like an agent boundary but does not reason with a model.
 - The ingestion pipeline is single-page and dry-run oriented. It does not recursively crawl sites.
 

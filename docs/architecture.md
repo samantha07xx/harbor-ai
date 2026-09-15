@@ -19,6 +19,11 @@ React chat UI
 
 The current runtime path is deterministic and local. It does not call an LLM, does not call an external embedding API, and does not require Qdrant.
 
+Retrieval has two local modes:
+
+- `demo`: uses hand-written source-grounded fixture chunks.
+- `live`: fetches allowlisted pages, extracts and chunks real page text, embeds it locally, and indexes it into an in-memory vector store.
+
 ## Ingestion
 
 ```text
@@ -46,7 +51,7 @@ The current ingestion CLI is a dry-run preview. It can fetch a single allowliste
 ## Production Migration Points
 
 - Replace deterministic embeddings with a real embedding provider.
-- Replace the local demo retrieval fixture with indexed Qdrant data.
+- Replace local in-memory retrieval with indexed Qdrant data.
 - Add production Qdrant collection creation and migrations.
 - Replace the deterministic pre-LLM agent with an LLM-backed agent loop.
 - Add source freshness monitoring and batch indexing.

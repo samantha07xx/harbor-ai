@@ -50,6 +50,7 @@ class HealthcareRetrievalTool:
             answer=draft_answer.answer,
             citations=draft_answer.citations,
             metadata={
+                "retrieval_corpus_mode": self.retrieval_service.corpus_mode,
                 "detected_intent": retrieval_result.rewrite.detected_intent,
                 "rewrite_confidence": retrieval_result.rewrite.confidence,
                 "needs_safety_check": retrieval_result.rewrite.needs_safety_check,

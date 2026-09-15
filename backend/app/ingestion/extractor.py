@@ -6,7 +6,7 @@ clean text and lightweight metadata.
 
 from datetime import UTC, datetime
 from hashlib import sha256
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -119,7 +119,7 @@ def extract_links(content_root: BeautifulSoup, base_url: str) -> list[ExtractedL
     for anchor in content_root.find_all("a", href=True):
         text = normalize_text(anchor.get_text(separator=" "))
         url = urljoin(base_url, anchor["href"])
-        if not text or url in seen_urls:
+        if not text or url in seen_urls or urlparse(url).scheme not in {"http", "https"}:
             continue
         links.append(ExtractedLink(text=text, url=url))
         seen_urls.add(url)

@@ -78,3 +78,22 @@ def test_extract_page_falls_back_to_title_when_h1_missing() -> None:
 
     assert extracted.title == "Health811 Ontario"
     assert "Call 811" in extracted.clean_text
+
+
+def test_extract_page_skips_non_web_links() -> None:
+    page = make_fetched_page(
+        """
+        <main>
+          <h1>Contact health services</h1>
+          <a href="tel:+18665323161">Call us</a>
+          <a href="mailto:test@example.com">Email us</a>
+          <a href="/page/your-health">Your health</a>
+        </main>
+        """
+    )
+
+    extracted = extract_page(page)
+
+    assert [str(link.url) for link in extracted.links] == [
+        "https://www.ontario.ca/page/your-health"
+    ]

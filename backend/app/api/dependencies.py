@@ -3,7 +3,9 @@
 from app.agent.answer_composer import AnswerComposer
 from app.agent.react_agent import DeterministicHealthcareAgent
 from app.agent.tools import HealthcareRetrievalTool
+from app.config import get_settings
 from app.retrieval.demo import get_local_demo_rewritten_retrieval_service
+from app.retrieval.live import get_live_or_demo_rewritten_retrieval_service
 from app.retrieval.service import RewrittenRetrievalService
 from app.safety.policy import SafetyPolicy
 
@@ -11,6 +13,8 @@ from app.safety.policy import SafetyPolicy
 def get_rewritten_retrieval_service() -> RewrittenRetrievalService:
     """Return the current retrieval service dependency."""
 
+    if get_settings().retrieval_mode == "live":
+        return get_live_or_demo_rewritten_retrieval_service()
     return get_local_demo_rewritten_retrieval_service()
 
 

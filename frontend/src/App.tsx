@@ -46,6 +46,7 @@ function statusBadges(metadata?: Record<string, unknown>): string[] {
   const safetyRoute = metadata.safety_route;
   const intent = metadata.detected_intent;
   const toolName = metadata.tool_name;
+  const corpusMode = metadata.retrieval_corpus_mode;
 
   if (status === "deterministic_agent_safety") {
     badges.push("Safety");
@@ -66,6 +67,11 @@ function statusBadges(metadata?: Record<string, unknown>): string[] {
   const toolLabel = metadataLabel(toolName);
   if (toolLabel) {
     badges.push(toolLabel);
+  }
+
+  const corpusLabel = metadataLabel(corpusMode);
+  if (corpusLabel) {
+    badges.push(corpusLabel);
   }
 
   return badges;

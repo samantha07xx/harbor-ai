@@ -58,9 +58,11 @@ class RewrittenRetrievalService:
         *,
         query_rewrite_service: QueryRewriteService,
         retrieval_service: RetrievalService,
+        corpus_mode: str = "configured",
     ) -> None:
         self.query_rewrite_service = query_rewrite_service
         self.retrieval_service = retrieval_service
+        self.corpus_mode = corpus_mode
 
     def retrieve(self, question: str, *, limit: int = 6) -> RewrittenRetrievalResult:
         """Rewrite a question and retrieve chunks for the primary rewritten query."""
