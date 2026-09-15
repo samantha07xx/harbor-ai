@@ -21,6 +21,7 @@ Implemented:
 - Embedding service interface and deterministic test provider
 - Qdrant point mapping for embedded chunks
 - Dry-run indexing pipeline for one approved page
+- Live Qdrant vector store interface with test doubles
 
 Not implemented yet:
 
@@ -31,7 +32,8 @@ Not implemented yet:
 - Recursive crawling
 - Source indexing
 - External embedding API calls
-- Live Qdrant client
+- Production Qdrant collection management
+- Retrieval service
 - Grounded answer generation
 
 Run locally from this folder:
