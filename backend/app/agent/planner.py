@@ -8,6 +8,8 @@ from typing import Any, Protocol
 
 import httpx
 
+PLANNER_MAX_OUTPUT_TOKENS = 180
+
 
 class AgentPlanRoute(StrEnum):
     """Planner routes for deciding whether to call retrieval."""
@@ -76,6 +78,7 @@ class OpenAIReActPlanner:
             },
             json={
                 "model": self.model,
+                "max_output_tokens": PLANNER_MAX_OUTPUT_TOKENS,
                 "input": [
                     {
                         "role": "system",

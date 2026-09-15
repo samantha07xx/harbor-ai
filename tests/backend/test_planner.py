@@ -92,6 +92,7 @@ def test_openai_react_planner_posts_responses_request() -> None:
     assert captured_request is not None
     assert captured_request.url.path == "/v1/responses"
     assert captured_request.headers["authorization"] == "Bearer test-key"
+    assert b'"max_output_tokens":180' in captured_request.content
     assert b"healthcare_retrieval tool" in captured_request.content
     assert plan.route == AgentPlanRoute.RETRIEVE
 

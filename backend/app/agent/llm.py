@@ -5,6 +5,8 @@ from typing import Protocol
 
 import httpx
 
+ANSWER_MAX_OUTPUT_TOKENS = 360
+
 
 @dataclass(frozen=True)
 class LLMAnswerRequest:
@@ -54,6 +56,7 @@ class OpenAIAnswerProvider:
             },
             json={
                 "model": self.model,
+                "max_output_tokens": ANSWER_MAX_OUTPUT_TOKENS,
                 "input": [
                     {
                         "role": "system",
@@ -89,7 +92,7 @@ GROUNDED_ANSWER_SYSTEM_PROMPT = (
     "You are Harbor, an Ontario healthcare navigation assistant. "
     "Answer only from the trusted source material provided in the prompt. Do not diagnose, "
     "prescribe, or invent facts. Give the user a direct, practical answer in no more than "
-    "six bullets or short paragraphs. Include citation markers like [1] for every factual "
+    "four bullets or short paragraphs. Include citation markers like [1] for every factual "
     "claim that comes from a source. Do not mention internal words like excerpts, chunks, "
     "retrieval, supplied material, or RAG. If the evidence is incomplete, briefly say what "
     "is missing and point the user to the cited official source."
