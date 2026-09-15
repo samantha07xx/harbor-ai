@@ -2,7 +2,7 @@
 
 Backend: Python, FastAPI, and Pydantic.
 
-Current status: Step 24 safety-gated pre-agent local RAG chat response.
+Current status: Step 25 agent-facing healthcare retrieval tool boundary.
 
 Implemented:
 
@@ -30,6 +30,7 @@ Implemented:
 - Deterministic cited answer composer for retrieved chunks
 - Chat endpoint wired to local retrieval and cited draft answers
 - Lightweight emergency and out-of-scope safety response layer
+- Agent-facing healthcare retrieval tool boundary
 
 Not implemented yet:
 

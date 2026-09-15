@@ -4,13 +4,11 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from app.agent.answer_composer import AnswerComposer
+from app.agent.tools import HealthcareRetrievalTool
 from app.api.dependencies import (
-    get_answer_composer,
-    get_rewritten_retrieval_service,
+    get_healthcare_retrieval_tool,
     get_safety_policy,
 )
-from app.retrieval.service import RewrittenRetrievalService
 from app.safety.policy import SafetyPolicy
 from app.schemas.chat import ChatRequest, ChatResponse
 
@@ -20,14 +18,13 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 @router.post("", response_model=ChatResponse)
 def create_chat_response(
     request: ChatRequest,
-    service: Annotated[
-        RewrittenRetrievalService,
-        Depends(get_rewritten_retrieval_service),
+    retrieval_tool: Annotated[
+        HealthcareRetrievalTool,
+        Depends(get_healthcare_retrieval_tool),
     ],
-    composer: Annotated[AnswerComposer, Depends(get_answer_composer)],
     safety_policy: Annotated[SafetyPolicy, Depends(get_safety_policy)],
 ) -> ChatResponse:
-    """Return a pre-agent local RAG response."""
+    """Return a safety-gated pre-agent local RAG response."""
 
     safety_assessment = safety_policy.assess(request.message)
     if not safety_assessment.should_continue:
@@ -47,11 +44,10 @@ def create_chat_response(
             },
         )
 
-    retrieval_result = service.retrieve(request.message, limit=1)
-    draft_answer = composer.compose(retrieval_result)
+    tool_result = retrieval_tool.run(request.message, limit=1)
     return ChatResponse(
-        answer=draft_answer.answer,
-        citations=draft_answer.citations,
+        answer=tool_result.answer,
+        citations=tool_result.citations,
         suggested_followups=[
             "How do I apply for OHIP?",
             "What documents do I need for a health card?",
@@ -61,11 +57,8 @@ def create_chat_response(
             "session_id": request.session_id,
             "implementation_status": "pre_agent_local_rag",
             "safety_route": safety_assessment.route,
-            "detected_intent": retrieval_result.rewrite.detected_intent,
-            "rewrite_confidence": retrieval_result.rewrite.confidence,
-            "needs_safety_check": retrieval_result.rewrite.needs_safety_check,
-            "primary_query": retrieval_result.rewrite.primary_query,
-            "retrieval_hit_count": len(retrieval_result.retrieval.hits),
+            "tool_name": tool_result.tool_name,
+            **tool_result.metadata,
             "user_context": request.user_context,
         },
     )

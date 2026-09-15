@@ -33,6 +33,7 @@ def test_chat_returns_pre_agent_local_rag_response() -> None:
     ]
     assert body["metadata"]["implementation_status"] == "pre_agent_local_rag"
     assert body["metadata"]["safety_route"] == "proceed"
+    assert body["metadata"]["tool_name"] == "healthcare_retrieval"
     assert body["metadata"]["detected_intent"] == "non_emergency_advice"
     assert body["metadata"]["retrieval_hit_count"] == 1
 

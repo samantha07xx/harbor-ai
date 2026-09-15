@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 24: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, embedding and vector-store boundaries, retrieval over a vector store, deterministic query rewrite, a rewrite-plus-retrieval composition service, a local retrieval testing API endpoint, deterministic cited answer drafting, a pre-agent local RAG chat response, and a lightweight safety/scope response layer. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, ingestion pipeline pieces, Qdrant-ready point mapping, dry-run indexing, vector-store-backed indexing, query embedding plus vector search result mapping, a lightweight query rewrite service, a composed retrieval entrypoint for later agent use, a small local demo retrieval fixture for endpoint testing, a conservative answer composer that formats retrieved chunks with citations, a chat endpoint wired to that local path, and deterministic routing for emergency and clearly out-of-scope questions. Recursive crawling, external embedding API calls, production Qdrant collection management, and a full agent loop are intentionally not implemented yet.
+This repository is currently at Step 25: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, embedding and vector-store boundaries, retrieval over a vector store, deterministic query rewrite, a rewrite-plus-retrieval composition service, a local retrieval testing API endpoint, deterministic cited answer drafting, a pre-agent local RAG chat response, a lightweight safety/scope response layer, and an agent-facing healthcare retrieval tool boundary. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, ingestion pipeline pieces, Qdrant-ready point mapping, dry-run indexing, vector-store-backed indexing, query embedding plus vector search result mapping, a lightweight query rewrite service, a composed retrieval entrypoint for later agent use, a small local demo retrieval fixture for endpoint testing, a conservative answer composer that formats retrieved chunks with citations, a chat endpoint wired to that local path, deterministic routing for emergency and clearly out-of-scope questions, and a stable tool interface the future agent can call. Recursive crawling, external embedding API calls, production Qdrant collection management, and a full agent loop are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -67,6 +67,7 @@ Completed:
 - Deterministic cited answer composer
 - Chat endpoint wired to local retrieval and cited draft answers
 - Lightweight emergency and out-of-scope safety response layer
+- Agent-facing healthcare retrieval tool boundary
 
 Not implemented yet:
 
@@ -79,4 +80,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 25 should add an agent tool boundary that can call the local retrieval path, without introducing LLM reasoning yet.
+Step 26 should add a minimal deterministic agent orchestrator that can choose the safety path or healthcare retrieval tool, still without LLM reasoning.
