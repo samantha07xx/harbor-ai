@@ -19,6 +19,7 @@ Implemented:
 - Metadata-aware chunking for extracted pages
 - Single-page fetch-extract-chunk ingestion service
 - Embedding service interface and deterministic test provider
+- Qdrant point mapping for embedded chunks
 
 Not implemented yet:
 
@@ -29,6 +30,7 @@ Not implemented yet:
 - Recursive crawling
 - Source indexing
 - External embedding API calls
+- Live Qdrant client
 - Grounded answer generation
 
 Run locally from this folder:

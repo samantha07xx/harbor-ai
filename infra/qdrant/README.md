@@ -19,3 +19,6 @@ Planned payload index fields:
 - `jurisdiction`
 - `language`
 - `last_crawled_at`
+
+Step 14 defines the Python mapping from embedded chunks into Qdrant-ready points.
+It still does not connect to or write to a live Qdrant instance.

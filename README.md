@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 13: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, and an embedding service interface with a deterministic test provider. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, chunk creation for one extracted page, and the embedding boundary. Recursive crawling, external embedding API calls, retrieval, indexing, and agent logic are intentionally not implemented yet.
+This repository is currently at Step 14: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, an embedding service interface with a deterministic test provider, and Qdrant point mapping. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, chunk creation for one extracted page, the embedding boundary, and mapping from embedded chunks to Qdrant-ready points. Recursive crawling, external embedding API calls, live Qdrant writes, retrieval, indexing, and agent logic are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -56,6 +56,7 @@ Completed:
 - Metadata-aware chunking for extracted pages
 - Single-page fetch-extract-chunk ingestion service
 - Embedding service interface and deterministic test provider
+- Qdrant point mapping for embedded chunks
 
 Not implemented yet:
 
@@ -70,4 +71,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 14 should define Qdrant point mapping for embedded chunks, without connecting to a live Qdrant instance yet.
+Step 15 should compose one-page ingestion, chunking, embedding, and Qdrant point mapping without writing to Qdrant.
