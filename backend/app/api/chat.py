@@ -14,7 +14,8 @@ def create_chat_response(request: ChatRequest) -> ChatResponse:
     return ChatResponse(
         answer=(
             "Harbor backend is running, but the agentic RAG chat pipeline is not "
-            "implemented yet. Step 2 only verifies the API foundation."
+            "implemented yet. This placeholder verifies the frontend and backend "
+            "can communicate."
         ),
         citations=[],
         suggested_followups=[

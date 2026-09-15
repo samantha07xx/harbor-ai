@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     api_port: int = 8000
     app_name: str = "Harbor API"
     qdrant_collection: str = "harbor_healthcare_chunks"
+    cors_origins: list[str] = [
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
+    ]
 
     model_config = SettingsConfigDict(
         env_file=".env",
