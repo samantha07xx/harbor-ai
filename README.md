@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 12: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-and-extract ingestion, metadata-aware chunking, and a single-page fetch-extract-chunk pipeline. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, and chunk creation for one extracted page. Recursive crawling, embeddings, retrieval, indexing, and agent logic are intentionally not implemented yet.
+This repository is currently at Step 13: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, and an embedding service interface with a deterministic test provider. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, chunk creation for one extracted page, and the embedding boundary. Recursive crawling, external embedding API calls, retrieval, indexing, and agent logic are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -55,6 +55,7 @@ Completed:
 - Single-page fetch-and-extract ingestion service
 - Metadata-aware chunking for extracted pages
 - Single-page fetch-extract-chunk ingestion service
+- Embedding service interface and deterministic test provider
 
 Not implemented yet:
 
@@ -69,4 +70,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 13 should add an embedding service interface and deterministic test double, without calling any external embedding API yet.
+Step 14 should define Qdrant point mapping for embedded chunks, without connecting to a live Qdrant instance yet.

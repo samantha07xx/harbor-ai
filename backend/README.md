@@ -18,6 +18,7 @@ Implemented:
 - Single-page fetch-and-extract ingestion service
 - Metadata-aware chunking for extracted pages
 - Single-page fetch-extract-chunk ingestion service
+- Embedding service interface and deterministic test provider
 
 Not implemented yet:
 
@@ -27,7 +28,7 @@ Not implemented yet:
 - Qdrant retrieval
 - Recursive crawling
 - Source indexing
-- Embeddings
+- External embedding API calls
 - Grounded answer generation
 
 Run locally from this folder:

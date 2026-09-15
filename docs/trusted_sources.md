@@ -26,6 +26,8 @@ Step 11 adds metadata-aware chunking for extracted pages. It still does not gene
 
 Step 12 composes guarded fetching, extraction, and chunking for one approved page. It still does not recursively crawl, generate embeddings, or index content.
 
+Step 13 adds the embedding service boundary and deterministic test provider. It still does not call external embedding APIs.
+
 Candidate later additions:
 
 - Public Health Ontario pages

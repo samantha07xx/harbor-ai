@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     qdrant_url: str = "http://localhost:6333"
     qdrant_api_key: str | None = None
     qdrant_collection: str = "harbor_healthcare_chunks"
+    embedding_model: str = "deterministic-test-embedding"
+    embedding_dimensions: int = 16
     crawler_user_agent: str = "HarborBot/0.1 (+https://github.com/samantha07xx/harbor-ai)"
     crawler_timeout_seconds: float = 10.0
     cors_origins: list[str] = [
