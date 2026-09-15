@@ -28,3 +28,5 @@ Step 15 adds a dry-run indexing pipeline that produces Qdrant-ready points for o
 Step 16 adds a vector store boundary for Qdrant and an in-memory test double. Unit tests still do not require Docker.
 
 Step 17 adds an indexing service that can upsert prepared points through that vector store boundary. Tests still use the in-memory store.
+
+Step 18 adds retrieval over the vector store boundary. Tests still use the in-memory store rather than Docker.

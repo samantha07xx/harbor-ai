@@ -20,6 +20,7 @@ from app.retrieval.qdrant_client import (
     map_chunk_to_qdrant_point,
     map_chunks_to_qdrant_points,
 )
+from app.retrieval.service import RetrievalService, map_search_hit_to_retrieval_hit
 
 __all__ = [
     "DeterministicEmbeddingProvider",
@@ -31,6 +32,7 @@ __all__ = [
     "QdrantPoint",
     "QdrantSearchHit",
     "QdrantVectorStore",
+    "RetrievalService",
     "VectorStore",
     "chunk_payload",
     "cosine_similarity",
@@ -38,4 +40,5 @@ __all__ = [
     "make_qdrant_point_id",
     "map_chunk_to_qdrant_point",
     "map_chunks_to_qdrant_points",
+    "map_search_hit_to_retrieval_hit",
 ]

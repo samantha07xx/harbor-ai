@@ -23,18 +23,17 @@ Implemented:
 - Dry-run indexing pipeline for one approved page
 - Live Qdrant vector store interface with test doubles
 - Indexing service that upserts through the vector store boundary
+- Retrieval service for query embedding and vector search
 
 Not implemented yet:
 
 - Agent loop
 - Query rewrite
-- Embeddings
-- Qdrant retrieval
+- External embedding API calls
+- Live Qdrant-backed retrieval verification
 - Recursive crawling
 - Batch source indexing
-- External embedding API calls
 - Production Qdrant collection management
-- Retrieval service
 - Grounded answer generation
 
 Run locally from this folder:
