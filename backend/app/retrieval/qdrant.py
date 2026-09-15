@@ -2,8 +2,7 @@
 
 from functools import lru_cache
 
-from app.retrieval.demo import LocalKeywordEmbeddingProvider
-from app.retrieval.embeddings import EmbeddingService
+from app.retrieval.embeddings import EmbeddingService, build_configured_embedding_service
 from app.retrieval.qdrant_client import QdrantVectorStore, VectorStore
 from app.retrieval.query_rewrite import QueryRewriteService
 from app.retrieval.service import RetrievalService, RewrittenRetrievalService
@@ -23,8 +22,8 @@ def build_qdrant_rewritten_retrieval_service(
 ) -> RewrittenRetrievalService:
     """Build the Qdrant-backed rewrite-plus-retrieval path."""
 
-    configured_embedding_service = embedding_service or EmbeddingService(
-        LocalKeywordEmbeddingProvider()
+    configured_embedding_service = embedding_service or build_configured_embedding_service(
+        default_provider="local_keyword"
     )
     return RewrittenRetrievalService(
         query_rewrite_service=QueryRewriteService(),

@@ -1,10 +1,15 @@
 from datetime import UTC, datetime
 
+import httpx
 import pytest
 
+from app.config import get_settings
 from app.retrieval.embeddings import (
     DeterministicEmbeddingProvider,
     EmbeddingService,
+    LocalKeywordEmbeddingProvider,
+    OpenAIEmbeddingProvider,
+    build_configured_embedding_service,
     format_chunk_for_embedding,
 )
 from app.schemas.chunks import SourceChunk
@@ -56,6 +61,68 @@ def test_deterministic_provider_rejects_empty_text() -> None:
 
     with pytest.raises(ValueError, match="empty text"):
         provider.embed_text("   ")
+
+
+def test_local_keyword_provider_maps_health_card_text() -> None:
+    provider = LocalKeywordEmbeddingProvider()
+
+    result = provider.embed_text("How do I apply for a health card?")
+
+    assert result.model == "local-keyword-fixture"
+    assert result.vector == [1.0, 0.0, 0.0, 0.0]
+
+
+def test_openai_embedding_provider_posts_to_embeddings_api() -> None:
+    captured_request: httpx.Request | None = None
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal captured_request
+        captured_request = request
+        return httpx.Response(
+            200,
+            json={
+                "data": [
+                    {
+                        "embedding": [0.1, 0.2, 0.3],
+                    }
+                ]
+            },
+            request=request,
+        )
+
+    provider = OpenAIEmbeddingProvider(
+        api_key="test-key",
+        model="text-embedding-3-small",
+        base_url="https://api.openai.test/v1",
+        http_client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    result = provider.embed_text("Ontario health card")
+
+    assert captured_request is not None
+    assert captured_request.url.path == "/v1/embeddings"
+    assert captured_request.headers["authorization"] == "Bearer test-key"
+    assert b'"model":"text-embedding-3-small"' in captured_request.content
+    assert result.model == "text-embedding-3-small"
+    assert result.vector == [0.1, 0.2, 0.3]
+
+
+def test_openai_embedding_provider_requires_api_key() -> None:
+    with pytest.raises(ValueError, match="OPENAI_API_KEY"):
+        OpenAIEmbeddingProvider(api_key="")
+
+
+def test_build_configured_embedding_service_supports_openai(monkeypatch) -> None:
+    monkeypatch.setenv("HARBOR_EMBEDDING_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    monkeypatch.setenv("HARBOR_OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
+    get_settings.cache_clear()
+
+    service = build_configured_embedding_service()
+
+    assert isinstance(service.provider, OpenAIEmbeddingProvider)
+    assert service.provider.model == "text-embedding-3-small"
+    get_settings.cache_clear()
 
 
 def test_embedding_service_embeds_query_and_chunk() -> None:

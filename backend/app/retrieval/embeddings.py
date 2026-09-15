@@ -1,13 +1,15 @@
-"""Embedding service interfaces and deterministic test provider.
+"""Embedding service interfaces and local/OpenAI providers.
 
-Step 13 defines how text and chunks enter the embedding layer. It does not call
-external embedding APIs.
+The default path stays local and deterministic. OpenAI embeddings are enabled
+only when explicitly configured.
 """
 
 from dataclasses import dataclass
 from hashlib import sha256
 from math import sqrt
 from typing import Protocol
+
+import httpx
 
 from app.config import get_settings
 from app.schemas.chunks import SourceChunk
@@ -77,6 +79,80 @@ class DeterministicEmbeddingProvider:
         )
 
 
+class LocalKeywordEmbeddingProvider:
+    """Small deterministic embedding provider for local endpoint testing."""
+
+    model = "local-keyword-fixture"
+
+    def embed_text(self, text: str) -> EmbeddingResult:
+        """Map known Harbor MVP topics onto stable fixture vectors."""
+
+        lower_text = text.lower()
+        if "newcomer" in lower_text or "new to ontario" in lower_text:
+            vector = [0.0, 0.0, 1.0, 0.0]
+        elif "811" in lower_text or "health811" in lower_text or "non-emergency" in lower_text:
+            vector = [0.0, 1.0, 0.0, 0.0]
+        elif "911" in lower_text or "chest pain" in lower_text or "emergency" in lower_text:
+            vector = [0.0, 0.0, 0.0, 1.0]
+        elif "ohip" in lower_text or "health card" in lower_text or "serviceontario" in lower_text:
+            vector = [1.0, 0.0, 0.0, 0.0]
+        else:
+            vector = [0.5, 0.5, 0.5, 0.5]
+
+        return EmbeddingResult(text=text, model=self.model, vector=vector)
+
+
+class OpenAIEmbeddingProvider:
+    """Embedding provider backed by OpenAI's embeddings API."""
+
+    def __init__(
+        self,
+        *,
+        api_key: str,
+        model: str = "text-embedding-3-small",
+        base_url: str = "https://api.openai.com/v1",
+        http_client: httpx.Client | None = None,
+    ) -> None:
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY is required for OpenAI embeddings")
+
+        self.api_key = api_key
+        self.model = model
+        self.base_url = base_url.rstrip("/")
+        self._http_client = http_client
+
+    def embed_text(self, text: str) -> EmbeddingResult:
+        """Embed text using OpenAI's embeddings endpoint."""
+
+        if not text.strip():
+            raise ValueError("Cannot embed empty text")
+
+        response = self._client().post(
+            f"{self.base_url}/embeddings",
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": self.model,
+                "input": text,
+            },
+        )
+        response.raise_for_status()
+        body = response.json()
+        vector = body["data"][0]["embedding"]
+        return EmbeddingResult(
+            text=text,
+            model=self.model,
+            vector=[float(value) for value in vector],
+        )
+
+    def _client(self) -> httpx.Client:
+        """Return the configured HTTP client."""
+
+        return self._http_client or httpx.Client(timeout=30.0)
+
+
 class EmbeddingService:
     """Application embedding boundary."""
 
@@ -96,6 +172,34 @@ class EmbeddingService:
         """Embed a source chunk using the Harbor chunk text format."""
 
         return self.provider.embed_text(format_chunk_for_embedding(chunk))
+
+
+def build_configured_embedding_service(
+    *,
+    default_provider: str = "deterministic",
+) -> EmbeddingService:
+    """Build an embedding service from runtime settings."""
+
+    settings = get_settings()
+    provider_name = (settings.embedding_provider or default_provider).lower()
+    if provider_name in {"deterministic", "local"}:
+        return EmbeddingService(
+            DeterministicEmbeddingProvider(
+                model=settings.embedding_model,
+                dimensions=settings.embedding_dimensions,
+            )
+        )
+    if provider_name in {"local_keyword", "keyword"}:
+        return EmbeddingService(LocalKeywordEmbeddingProvider())
+    if provider_name == "openai":
+        return EmbeddingService(
+            OpenAIEmbeddingProvider(
+                api_key=settings.openai_api_key or "",
+                model=settings.openai_embedding_model,
+                base_url=settings.openai_base_url,
+            )
+        )
+    raise ValueError(f"Unsupported embedding provider: {settings.embedding_provider}")
 
 
 def format_chunk_for_embedding(chunk: SourceChunk) -> str:

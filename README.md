@@ -13,6 +13,7 @@ The original design baseline lives in `docs/harbor_project_documentation.md`. Th
 - Local demo retrieval index with cited answers
 - Optional live-ingested retrieval mode from allowlisted Ontario healthcare pages
 - Optional Qdrant-backed retrieval mode after indexing allowlisted pages
+- Optional OpenAI embeddings provider for Qdrant indexing and search
 - Trusted source registry and URL allowlist checks
 - One-page fetch, extraction, chunking, embedding, Qdrant-point preview, and Qdrant upsert CLI
 - Golden-question evaluation for deterministic chat behavior
@@ -42,6 +43,20 @@ cd infra
 docker compose up -d qdrant
 cd ../backend
 source .venv/bin/activate
+python -m app.ingestion.cli --write-to-qdrant --default-live-urls
+HARBOR_RETRIEVAL_MODE=qdrant uvicorn app.main:app --reload
+```
+
+To rebuild Qdrant with OpenAI embeddings, use a separate collection because OpenAI
+embedding vectors have different dimensions from the local keyword fixture:
+
+```bash
+cd backend
+source .venv/bin/activate
+export OPENAI_API_KEY="your_api_key_here"
+export HARBOR_EMBEDDING_PROVIDER=openai
+export HARBOR_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+export HARBOR_QDRANT_COLLECTION=harbor_healthcare_chunks_openai
 python -m app.ingestion.cli --write-to-qdrant --default-live-urls
 HARBOR_RETRIEVAL_MODE=qdrant uvicorn app.main:app --reload
 ```
@@ -110,7 +125,8 @@ python -m app.ingestion.cli --write-to-qdrant --default-live-urls
 - No external embedding API or LLM API is called.
 - By default, chat uses a tiny local demo retrieval fixture. Set `HARBOR_RETRIEVAL_MODE=live` to build an in-memory index from real allowlisted pages at startup.
 - Set `HARBOR_RETRIEVAL_MODE=qdrant` after indexing to search the configured Qdrant collection.
-- Live and Qdrant modes are still local and deterministic. They do not use external embeddings or an LLM.
+- Live mode is still local and deterministic. Qdrant mode can use either the local keyword fixture or OpenAI embeddings.
+- LLM answer generation is still not implemented; answers are composed by the deterministic cited answer composer.
 - The agent is deterministic and pre-LLM; it is shaped like an agent boundary but does not reason with a model.
 - The ingestion pipeline is single-page and dry-run oriented. It does not recursively crawl sites.
 

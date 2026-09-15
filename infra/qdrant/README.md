@@ -64,4 +64,7 @@ python -m app.ingestion.cli --write-to-qdrant --default-live-urls
 HARBOR_RETRIEVAL_MODE=qdrant uvicorn app.main:app --reload
 ```
 
-The current local embedding provider is deterministic and fixture-oriented. It proves the Qdrant integration path without calling external embedding APIs.
+The default local Qdrant path uses a deterministic keyword fixture. To use real
+OpenAI embeddings, set `HARBOR_EMBEDDING_PROVIDER=openai`,
+`OPENAI_API_KEY`, and a separate collection name such as
+`HARBOR_QDRANT_COLLECTION=harbor_healthcare_chunks_openai` before indexing.

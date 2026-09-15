@@ -13,11 +13,8 @@ from app.ingestion.crawler import Crawler, CrawlerError
 from app.ingestion.indexer import DryRunIndexer
 from app.ingestion.page_ingestion import PageIngestionService
 from app.ingestion.source_registry import get_enabled_sources
-from app.retrieval.demo import (
-    LocalKeywordEmbeddingProvider,
-    get_local_demo_rewritten_retrieval_service,
-)
-from app.retrieval.embeddings import EmbeddingService
+from app.retrieval.demo import get_local_demo_rewritten_retrieval_service
+from app.retrieval.embeddings import EmbeddingService, LocalKeywordEmbeddingProvider
 from app.retrieval.qdrant_client import InMemoryVectorStore
 from app.retrieval.query_rewrite import QueryRewriteService
 from app.retrieval.service import RetrievalService, RewrittenRetrievalService

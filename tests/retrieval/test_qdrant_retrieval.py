@@ -1,5 +1,5 @@
-from app.retrieval.demo import LocalKeywordEmbeddingProvider, make_demo_chunks
-from app.retrieval.embeddings import EmbeddingService
+from app.retrieval.demo import make_demo_chunks
+from app.retrieval.embeddings import EmbeddingService, LocalKeywordEmbeddingProvider
 from app.retrieval.qdrant import build_qdrant_rewritten_retrieval_service
 from app.retrieval.qdrant_client import InMemoryVectorStore, map_chunk_to_qdrant_point
 

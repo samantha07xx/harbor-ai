@@ -7,7 +7,7 @@ being developed. It is not the production knowledge base.
 from datetime import UTC, datetime
 from functools import lru_cache
 
-from app.retrieval.embeddings import EmbeddingResult, EmbeddingService
+from app.retrieval.embeddings import EmbeddingService, LocalKeywordEmbeddingProvider
 from app.retrieval.qdrant_client import InMemoryVectorStore, map_chunk_to_qdrant_point
 from app.retrieval.query_rewrite import QueryRewriteService
 from app.retrieval.service import RetrievalService, RewrittenRetrievalService
@@ -15,29 +15,6 @@ from app.schemas.chunks import SourceChunk
 from app.schemas.sources import TopicCategory, TrustTier
 
 DEMO_HASH = "sha256:" + "c" * 64
-
-
-class LocalKeywordEmbeddingProvider:
-    """Small deterministic embedding provider for local endpoint testing."""
-
-    model = "local-keyword-fixture"
-
-    def embed_text(self, text: str) -> EmbeddingResult:
-        """Map known Harbor MVP topics onto stable fixture vectors."""
-
-        lower_text = text.lower()
-        if "newcomer" in lower_text or "new to ontario" in lower_text:
-            vector = [0.0, 0.0, 1.0, 0.0]
-        elif "811" in lower_text or "health811" in lower_text or "non-emergency" in lower_text:
-            vector = [0.0, 1.0, 0.0, 0.0]
-        elif "911" in lower_text or "chest pain" in lower_text or "emergency" in lower_text:
-            vector = [0.0, 0.0, 0.0, 1.0]
-        elif "ohip" in lower_text or "health card" in lower_text or "serviceontario" in lower_text:
-            vector = [1.0, 0.0, 0.0, 0.0]
-        else:
-            vector = [0.5, 0.5, 0.5, 0.5]
-
-        return EmbeddingResult(text=text, model=self.model, vector=vector)
 
 
 @lru_cache

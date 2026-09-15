@@ -14,8 +14,11 @@ from app.ingestion.crawler import Crawler
 from app.ingestion.indexer import DryRunIndexer, DryRunIndexingResult, IndexingService
 from app.ingestion.page_ingestion import PageIngestionService
 from app.ingestion.source_registry import get_enabled_sources
-from app.retrieval.demo import LocalKeywordEmbeddingProvider
-from app.retrieval.embeddings import DeterministicEmbeddingProvider, EmbeddingService
+from app.retrieval.embeddings import (
+    DeterministicEmbeddingProvider,
+    EmbeddingService,
+    build_configured_embedding_service,
+)
 from app.retrieval.live import DEFAULT_LIVE_INGESTION_URLS
 from app.retrieval.qdrant_client import QdrantVectorStore, VectorStore
 
@@ -62,7 +65,7 @@ def build_qdrant_indexing_service(
         get_enabled_sources(),
         http_client=http_client,
     )
-    embedding_service = EmbeddingService(LocalKeywordEmbeddingProvider())
+    embedding_service = build_configured_embedding_service(default_provider="local_keyword")
     configured_vector_store = vector_store or QdrantVectorStore()
     return (
         IndexingService(
