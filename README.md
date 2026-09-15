@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 6: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, and the first trusted source registry. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, and approved Ontario healthcare seed URLs. Crawling, retrieval, indexing, and agent logic are intentionally not implemented yet.
+This repository is currently at Step 7: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, and URL allowlist checks. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, and a crawler boundary that can reject unapproved URLs before fetching. Crawling, retrieval, indexing, and agent logic are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -49,6 +49,7 @@ Completed:
 - Planned Qdrant collection configuration notes
 - Core trusted source, source page, chunk, citation, and retrieval result schemas
 - First trusted source registry and loader
+- Crawler interface with URL allowlist decisions
 
 Not implemented yet:
 
@@ -63,4 +64,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 7 should add the crawler interface and URL allowlist checks, without fetching or indexing pages yet.
+Step 8 should implement a fetch-free page extraction contract and cleaned page schema tests, or start the crawler fetch implementation once Docker/Qdrant decisions are settled.

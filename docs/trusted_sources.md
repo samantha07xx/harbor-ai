@@ -14,6 +14,8 @@ Initial approved source groups:
 
 Step 6 only defines the registry. It does not crawl, approve new domains dynamically, or index source content.
 
+Step 7 adds URL allowlist checks so future crawler code can reject unapproved domains and paths before any network fetch happens.
+
 Candidate later additions:
 
 - Public Health Ontario pages

@@ -12,6 +12,7 @@ Implemented:
 - Environment-backed settings
 - Core trusted source and chunk schemas
 - Trusted source registry loader
+- Crawler interface with URL allowlist checks
 
 Not implemented yet:
 
