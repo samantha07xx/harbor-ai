@@ -14,13 +14,8 @@ const initialMessages: ChatMessage[] = [
   {
     id: "welcome",
     role: "assistant",
-    content:
-      "Welcome to Harbor. This local demo uses a deterministic pre-LLM agent with source citations.",
+    content: "Welcome to Harbor. Ask an Ontario healthcare navigation question to search trusted sources.",
     citations: [],
-    metadata: {
-      implementation_status: "deterministic_agent_local_rag",
-      agent_mode: "deterministic_pre_llm",
-    },
   },
 ];
 
@@ -57,6 +52,8 @@ function statusBadges(metadata?: Record<string, unknown>): string[] {
     badges.push("Local RAG");
   } else if (status === "openai_agent_tool_rag") {
     badges.push("Agent RAG");
+  } else if (status === "openai_rate_limited") {
+    badges.push("OpenAI rate limit");
   }
 
   const agentLabel = metadataLabel(agentMode);
@@ -240,7 +237,7 @@ export function App() {
               <div className="message-label">Harbor</div>
               <p>
                 <LoaderCircle size={16} aria-hidden="true" />
-                Checking the backend
+                Planning answer
               </p>
             </article>
           )}
