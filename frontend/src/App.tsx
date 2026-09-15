@@ -1,4 +1,4 @@
-import { ArrowUp, Database, ExternalLink, LoaderCircle, RotateCcw, ShieldCheck } from "lucide-react";
+import { ArrowUp, Database, LoaderCircle, RotateCcw, ShieldCheck } from "lucide-react";
 import { FormEvent, useMemo, useRef, useState } from "react";
 
 import { sendChatMessage } from "./api";
@@ -18,14 +18,6 @@ const initialMessages: ChatMessage[] = [
     citations: [],
   },
 ];
-
-function shouldShowCitations(message: ChatMessage): boolean {
-  if (message.citations.length === 0) {
-    return false;
-  }
-
-  return message.metadata?.detected_intent === "ohip_application";
-}
 
 export function App() {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
@@ -121,19 +113,6 @@ export function App() {
             <article className={`message ${message.role}`} key={message.id}>
               <div className="message-label">{message.role === "assistant" ? "Harbor" : "You"}</div>
               <p>{message.content}</p>
-
-              {shouldShowCitations(message) && (
-                <ul className="citation-list" aria-label="Sources">
-                  {message.citations.map((citation) => (
-                    <li key={citation.url}>
-                      <a href={citation.url} target="_blank" rel="noreferrer">
-                        {citation.title}
-                        <ExternalLink size={14} aria-hidden="true" />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
             </article>
           ))}
 

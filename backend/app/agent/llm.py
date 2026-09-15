@@ -5,8 +5,6 @@ from typing import Protocol
 
 import httpx
 
-ANSWER_MAX_OUTPUT_TOKENS = 360
-
 
 @dataclass(frozen=True)
 class LLMAnswerRequest:
@@ -56,7 +54,6 @@ class OpenAIAnswerProvider:
             },
             json={
                 "model": self.model,
-                "max_output_tokens": ANSWER_MAX_OUTPUT_TOKENS,
                 "input": [
                     {
                         "role": "system",

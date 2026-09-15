@@ -40,7 +40,7 @@ def test_openai_answer_provider_posts_grounded_responses_request() -> None:
     assert captured_request.url.path == "/v1/responses"
     assert captured_request.headers["authorization"] == "Bearer test-key"
     assert b'"model":"gpt-5-mini"' in captured_request.content
-    assert b'"max_output_tokens":360' in captured_request.content
+    assert b"max_output_tokens" not in captured_request.content
     assert b"Answer only from the trusted source material" in captured_request.content
     assert b"Do not mention internal words" in captured_request.content
     assert b"Use clear labels in the same line" in captured_request.content
