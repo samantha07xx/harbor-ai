@@ -59,6 +59,32 @@ button {
   background: #fbfcfa;
 }
 
+.runtime-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.runtime-strip span,
+.metadata-badges span {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(76, 124, 111, 0.18);
+  border-radius: 999px;
+  background: #eef7f2;
+  color: #24594c;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.runtime-strip span {
+  padding: 6px 9px;
+}
+
 .eyebrow {
   margin: 0 0 4px;
   color: #52635f;
@@ -131,6 +157,7 @@ h1 {
   padding: 14px 16px;
   border-radius: 8px;
   line-height: 1.55;
+  white-space: pre-wrap;
 }
 
 .message.assistant p {
@@ -159,6 +186,20 @@ h1 {
   margin: 10px 0 0;
   padding: 0;
   list-style: none;
+}
+
+.metadata-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.metadata-badges span {
+  min-height: 26px;
+  padding: 6px 8px;
+  background: #f8fbf8;
+  font-size: 0.74rem;
 }
 
 .citation-list a {

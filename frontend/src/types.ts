@@ -23,5 +23,6 @@ export type ChatMessage = {
   role: "assistant" | "user";
   content: string;
   citations: Citation[];
+  metadata?: Record<string, unknown>;
   suggestedFollowups?: string[];
 };

@@ -1,4 +1,4 @@
-import { ArrowUp, ExternalLink, LoaderCircle, RotateCcw } from "lucide-react";
+import { ArrowUp, Database, ExternalLink, LoaderCircle, RotateCcw, ShieldCheck } from "lucide-react";
 import { FormEvent, useMemo, useRef, useState } from "react";
 
 import { sendChatMessage } from "./api";
@@ -15,10 +15,77 @@ const initialMessages: ChatMessage[] = [
     id: "welcome",
     role: "assistant",
     content:
-      "Welcome to Harbor. Ask a question about Ontario healthcare navigation and I will test the backend connection.",
+      "Welcome to Harbor. This local demo uses a deterministic pre-LLM agent with source citations.",
     citations: [],
+    metadata: {
+      implementation_status: "deterministic_agent_local_rag",
+      agent_mode: "deterministic_pre_llm",
+    },
   },
 ];
+
+function metadataLabel(value: unknown): string | null {
+  if (typeof value !== "string" || value.length === 0) {
+    return null;
+  }
+
+  return value
+    .split("_")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function statusBadges(metadata?: Record<string, unknown>): string[] {
+  if (!metadata) {
+    return [];
+  }
+
+  const badges: string[] = [];
+  const status = metadata.implementation_status;
+  const safetyRoute = metadata.safety_route;
+  const intent = metadata.detected_intent;
+  const toolName = metadata.tool_name;
+
+  if (status === "deterministic_agent_safety") {
+    badges.push("Safety");
+  } else if (status === "deterministic_agent_local_rag") {
+    badges.push("Local RAG");
+  }
+
+  const routeLabel = metadataLabel(safetyRoute);
+  if (routeLabel && routeLabel !== "Proceed") {
+    badges.push(routeLabel);
+  }
+
+  const intentLabel = metadataLabel(intent);
+  if (intentLabel) {
+    badges.push(intentLabel);
+  }
+
+  const toolLabel = metadataLabel(toolName);
+  if (toolLabel) {
+    badges.push(toolLabel);
+  }
+
+  return badges;
+}
+
+function MetadataBadges({ metadata }: { metadata?: Record<string, unknown> }) {
+  const badges = statusBadges(metadata);
+
+  if (badges.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="metadata-badges" aria-label="Response metadata">
+      {badges.map((badge) => (
+        <span key={badge}>{badge}</span>
+      ))}
+    </div>
+  );
+}
 
 export function App() {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
@@ -62,6 +129,7 @@ export function App() {
           role: "assistant",
           content: response.answer,
           citations: response.citations,
+          metadata: response.metadata,
           suggestedFollowups: response.suggested_followups,
         },
       ]);
@@ -92,6 +160,16 @@ export function App() {
           <div>
             <p className="eyebrow">Ontario healthcare navigation</p>
             <h1>Harbor</h1>
+            <div className="runtime-strip" aria-label="Runtime status">
+              <span>
+                <ShieldCheck size={14} aria-hidden="true" />
+                Pre-LLM agent
+              </span>
+              <span>
+                <Database size={14} aria-hidden="true" />
+                Local demo index
+              </span>
+            </div>
           </div>
           <button className="icon-button" type="button" onClick={resetChat} aria-label="Reset chat">
             <RotateCcw size={18} aria-hidden="true" />
@@ -103,6 +181,8 @@ export function App() {
             <article className={`message ${message.role}`} key={message.id}>
               <div className="message-label">{message.role === "assistant" ? "Harbor" : "You"}</div>
               <p>{message.content}</p>
+
+              {message.role === "assistant" && <MetadataBadges metadata={message.metadata} />}
 
               {message.citations.length > 0 && (
                 <ul className="citation-list" aria-label="Sources">

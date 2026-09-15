@@ -2,7 +2,7 @@
 
 Frontend: React, TypeScript, and Vite.
 
-Current status: Step 23 chat shell connected to the pre-agent local RAG backend.
+Current status: Step 29 chat shell connected to the deterministic local demo backend.
 
 Implemented:
 
@@ -13,6 +13,8 @@ Implemented:
 - Suggested prompt buttons
 - API client for `POST /api/chat`
 - Citation rendering from backend responses
+- Runtime badges for local/pre-LLM demo status
+- Response metadata badges for safety, intent, and retrieval tool status
 
 Not implemented yet:
 
