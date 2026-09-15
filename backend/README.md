@@ -2,7 +2,7 @@
 
 Backend: Python, FastAPI, and Pydantic.
 
-Current status: Step 26 deterministic pre-LLM agent orchestration.
+Current status: Step 27 golden-question evaluation.
 
 Implemented:
 
@@ -32,6 +32,7 @@ Implemented:
 - Lightweight emergency and out-of-scope safety response layer
 - Agent-facing healthcare retrieval tool boundary
 - Deterministic pre-LLM agent orchestrator
+- Golden-question evaluation runner
 
 Not implemented yet:
 
@@ -71,4 +72,10 @@ Local chat endpoint:
 curl -X POST http://127.0.0.1:8000/api/chat \
   -H "Content-Type: application/json" \
   -d '{"session_id":"local-test","message":"Can I call someone if it is not an emergency?","user_context":{"province":"Ontario"}}'
+```
+
+Local evaluation:
+
+```bash
+python -m app.evaluation.run_eval
 ```

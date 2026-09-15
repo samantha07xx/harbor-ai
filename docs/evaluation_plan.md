@@ -1,8 +1,8 @@
 # Evaluation Plan
 
-Harbor evaluation will start with a small hand-written set of common Ontario healthcare navigation questions.
+Harbor evaluation starts with a small hand-written set of common Ontario healthcare navigation questions in `backend/app/evaluation/golden_questions.json`.
 
-Planned checks:
+Current checks:
 
 - Retrieval relevance
 - Citation coverage
@@ -10,4 +10,10 @@ Planned checks:
 - Scope control
 - Safety behavior for medical or emergency questions
 
-The first evaluation dataset will be added after ingestion and retrieval foundations exist.
+Run the local deterministic evaluation from `backend/`:
+
+```bash
+python -m app.evaluation.run_eval
+```
+
+The first dataset is intentionally small. It protects the MVP path while ingestion, retrieval, and agent orchestration are still local and deterministic.

@@ -26,10 +26,10 @@ class LocalKeywordEmbeddingProvider:
         """Map known Harbor MVP topics onto stable fixture vectors."""
 
         lower_text = text.lower()
-        if "811" in lower_text or "health811" in lower_text or "non-emergency" in lower_text:
-            vector = [0.0, 1.0, 0.0, 0.0]
-        elif "newcomer" in lower_text or "new to ontario" in lower_text:
+        if "newcomer" in lower_text or "new to ontario" in lower_text:
             vector = [0.0, 0.0, 1.0, 0.0]
+        elif "811" in lower_text or "health811" in lower_text or "non-emergency" in lower_text:
+            vector = [0.0, 1.0, 0.0, 0.0]
         elif "911" in lower_text or "chest pain" in lower_text or "emergency" in lower_text:
             vector = [0.0, 0.0, 0.0, 1.0]
         elif "ohip" in lower_text or "health card" in lower_text or "serviceontario" in lower_text:
