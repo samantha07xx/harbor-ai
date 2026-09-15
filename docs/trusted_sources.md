@@ -2,12 +2,19 @@
 
 Harbor should only answer factual Ontario healthcare navigation questions from approved official or public healthcare sources.
 
-Initial source registry will be created in a later ingestion step. Candidate source categories from the design baseline:
+The first source registry lives at:
+
+- `backend/app/ingestion/trusted_sources.json`
+
+Initial approved source groups:
 
 - Ontario government healthcare pages
-- ServiceOntario pages
-- Health811
-- Public Health Ontario
-- Settlement and newcomer service pages when clearly public and trustworthy
+- Health811 Ontario
+- Ontario Health
 
-Step 1 does not crawl, approve, or index sources.
+Step 6 only defines the registry. It does not crawl, approve new domains dynamically, or index source content.
+
+Candidate later additions:
+
+- Public Health Ontario pages
+- Settlement and newcomer service pages when clearly public and explicitly approved

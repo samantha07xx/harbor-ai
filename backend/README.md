@@ -11,6 +11,7 @@ Implemented:
 - Placeholder `POST /api/chat`
 - Environment-backed settings
 - Core trusted source and chunk schemas
+- Trusted source registry loader
 
 Not implemented yet:
 

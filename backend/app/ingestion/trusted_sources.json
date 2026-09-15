@@ -1,0 +1,57 @@
+[
+  {
+    "source_id": "ontario_health_pages",
+    "name": "Ontario.ca Health Pages",
+    "base_url": "https://www.ontario.ca/",
+    "seed_urls": [
+      "https://www.ontario.ca/page/apply-ohip-and-get-health-card",
+      "https://www.ontario.ca/page/documents-needed-get-health-card",
+      "https://www.ontario.ca/page/what-ohip-covers",
+      "https://www.ontario.ca/page/find-family-doctor-or-nurse-practitioner",
+      "https://www.ontario.ca/page/walk-clinics",
+      "https://www.ontario.ca/page/your-health",
+      "https://www.ontario.ca/page/ministry-health"
+    ],
+    "allowed_url_patterns": [
+      "https://www.ontario.ca/page/*health*",
+      "https://www.ontario.ca/page/*ohip*",
+      "https://www.ontario.ca/page/*family-doctor*",
+      "https://www.ontario.ca/page/*walk-clinics",
+      "https://www.ontario.ca/page/ministry-health"
+    ],
+    "trust_tier": "official_government",
+    "jurisdiction": "Ontario",
+    "language": "en",
+    "enabled": true
+  },
+  {
+    "source_id": "health811",
+    "name": "Health811 Ontario",
+    "base_url": "https://health811.ontario.ca/",
+    "seed_urls": [
+      "https://health811.ontario.ca/"
+    ],
+    "allowed_url_patterns": [
+      "https://health811.ontario.ca/*"
+    ],
+    "trust_tier": "public_health",
+    "jurisdiction": "Ontario",
+    "language": "en",
+    "enabled": true
+  },
+  {
+    "source_id": "ontario_health",
+    "name": "Ontario Health",
+    "base_url": "https://www.ontariohealth.ca/",
+    "seed_urls": [
+      "https://www.ontariohealth.ca/"
+    ],
+    "allowed_url_patterns": [
+      "https://www.ontariohealth.ca/*"
+    ],
+    "trust_tier": "public_health",
+    "jurisdiction": "Ontario",
+    "language": "en",
+    "enabled": true
+  }
+]
