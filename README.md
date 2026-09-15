@@ -2,7 +2,9 @@
 
 Harbor is a local demo of an AI-assisted Ontario healthcare navigation app for newcomers. It provides a web chat UI backed by ReAct-style tool planning, source-grounded retrieval, citations, safety/scope routing, live allowlisted ingestion, optional Qdrant-backed retrieval, optional OpenAI embeddings, optional OpenAI grounded answer generation, ingestion dry-runs, and golden-question evaluation.
 
-The original design baseline lives in `docs/harbor_project_documentation.md`. The current implemented state is summarized in `docs/current_state.md`.
+The original design baseline lives in `docs/harbor_project_documentation.md`.
+The final implemented project status is summarized in `docs/final_project_status.md`.
+The detailed current implementation notes live in `docs/current_state.md`.
 
 ## What Works Now
 
@@ -127,13 +129,13 @@ python -m app.ingestion.cli --write-to-qdrant --default-live-urls
 ## Current Limits
 
 - Qdrant-backed retrieval is wired, but it requires a running local Qdrant instance and an indexing step before use.
-- No external embedding API or LLM API is called.
+- External embedding and LLM calls are optional and only run when OpenAI environment variables are configured.
 - By default, chat uses a tiny local demo retrieval fixture. Set `HARBOR_RETRIEVAL_MODE=live` to build an in-memory index from real allowlisted pages at startup.
 - Set `HARBOR_RETRIEVAL_MODE=qdrant` after indexing to search the configured Qdrant collection.
 - Live mode is still local and deterministic. Qdrant mode can use either the local keyword fixture or OpenAI embeddings.
 - LLM answer generation is optional and off by default. Set `HARBOR_ANSWER_PROVIDER=openai` to use OpenAI grounded answer generation from retrieved source excerpts.
 - ReAct-style planning is optional and off by default. Set `HARBOR_AGENT_PROVIDER=openai` to let the agent decide whether to retrieve, clarify, answer directly, or route out of scope.
-- The agent is deterministic and pre-LLM; it is shaped like an agent boundary but does not reason with a model.
+- By default, the agent uses local deterministic routing. With `HARBOR_AGENT_PROVIDER=openai`, it uses an OpenAI ReAct-style planner.
 - The ingestion pipeline is single-page and dry-run oriented. It does not recursively crawl sites.
 
 ## Repo Map

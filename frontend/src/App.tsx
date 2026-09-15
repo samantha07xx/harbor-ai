@@ -189,11 +189,11 @@ export function App() {
             <div className="runtime-strip" aria-label="Runtime status">
               <span>
                 <ShieldCheck size={14} aria-hidden="true" />
-                Pre-LLM agent
+                Agentic RAG
               </span>
               <span>
                 <Database size={14} aria-hidden="true" />
-                Local demo index
+                Trusted sources
               </span>
             </div>
           </div>
