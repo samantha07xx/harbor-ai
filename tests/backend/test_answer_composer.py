@@ -1,12 +1,24 @@
 from datetime import UTC, datetime
 
 from app.agent.answer_composer import AnswerComposer
+from app.agent.llm import LLMAnswerRequest
 from app.retrieval.query_rewrite import QueryIntent, QueryRewriteResult
 from app.retrieval.service import RewrittenRetrievalResult
 from app.schemas.chunks import RetrievalHit, RetrievalResult, SourceChunk
 from app.schemas.sources import TopicCategory, TrustTier
 
 HASH = "sha256:" + "d" * 64
+
+
+class FakeLLMAnswerProvider:
+    model = "fake-llm"
+
+    def __init__(self) -> None:
+        self.requests: list[LLMAnswerRequest] = []
+
+    def generate_answer(self, request: LLMAnswerRequest) -> str:
+        self.requests.append(request)
+        return "Use the cited official source to apply for OHIP. [1]"
 
 
 def make_hit(
@@ -116,3 +128,29 @@ def test_composer_places_emergency_notice_first_when_needed() -> None:
 
     assert answer.answer.startswith("If this may be an emergency, call 911")
     assert answer.citations[0].title == "Emergency care"
+
+
+def test_composer_can_use_llm_provider_for_grounded_answer() -> None:
+    provider = FakeLLMAnswerProvider()
+    composer = AnswerComposer(llm_provider=provider)
+
+    answer = composer.compose(
+        make_result(
+            hits=[
+                make_hit(
+                    title="Apply for OHIP and get a health card",
+                    url="https://www.ontario.ca/page/apply-ohip-and-get-health-card",
+                    text="Apply for OHIP through ServiceOntario.",
+                    topic=TopicCategory.HEALTH_CARD_APPLICATION,
+                )
+            ],
+            intent=QueryIntent.OHIP_APPLICATION,
+        )
+    )
+
+    assert answer.answer == "Use the cited official source to apply for OHIP. [1]"
+    assert answer.answer_mode == "openai_grounded"
+    assert answer.llm_model == "fake-llm"
+    assert answer.citations[0].title == "Apply for OHIP and get a health card"
+    assert provider.requests[0].question == "Can I call someone?"
+    assert "Apply for OHIP through ServiceOntario." in provider.requests[0].evidence[0]

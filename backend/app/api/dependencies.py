@@ -1,6 +1,7 @@
 """Shared FastAPI dependencies."""
 
 from app.agent.answer_composer import AnswerComposer
+from app.agent.llm import OpenAIAnswerProvider
 from app.agent.react_agent import DeterministicHealthcareAgent
 from app.agent.tools import HealthcareRetrievalTool
 from app.config import get_settings
@@ -25,6 +26,15 @@ def get_rewritten_retrieval_service() -> RewrittenRetrievalService:
 def get_answer_composer() -> AnswerComposer:
     """Return the current answer composer dependency."""
 
+    settings = get_settings()
+    if settings.answer_provider.lower() == "openai":
+        return AnswerComposer(
+            OpenAIAnswerProvider(
+                api_key=settings.openai_api_key or "",
+                model=settings.llm_model,
+                base_url=settings.openai_base_url,
+            )
+        )
     return AnswerComposer()
 
 

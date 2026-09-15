@@ -57,5 +57,7 @@ class HealthcareRetrievalTool:
                 "primary_query": retrieval_result.rewrite.primary_query,
                 "rewritten_queries": retrieval_result.rewrite.rewritten_queries,
                 "retrieval_hit_count": len(retrieval_result.retrieval.hits),
+                "answer_mode": draft_answer.answer_mode,
+                "llm_model": draft_answer.llm_model,
             },
         )

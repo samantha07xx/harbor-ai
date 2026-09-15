@@ -25,6 +25,7 @@ Harbor is currently a local MVP/demo, not a production healthcare product.
 - Optional live-ingested local retrieval mode from allowlisted Ontario healthcare pages.
 - Optional Qdrant-backed retrieval mode after live page indexing.
 - Optional OpenAI embeddings provider for Qdrant indexing and retrieval.
+- Optional OpenAI grounded answer generation from retrieved source excerpts.
 
 ### Ingestion
 
@@ -39,6 +40,7 @@ Harbor is currently a local MVP/demo, not a production healthcare product.
 - CLI dry-run for fetch/extract/chunk/embed/index preview.
 - CLI path for creating the Qdrant collection and upserting allowlisted page chunks.
 - OpenAI embeddings boundary using `text-embedding-3-small` by default when enabled.
+- OpenAI Responses API answer-generation boundary using `gpt-5-mini` by default when enabled.
 
 ### Evaluation
 
@@ -49,7 +51,6 @@ Harbor is currently a local MVP/demo, not a production healthcare product.
 ## Not Implemented
 
 - Production Qdrant payload indexes.
-- LLM-based answer generation.
 - LLM-based ReAct or LangGraph agent loop.
 - Recursive crawling.
 - Batch indexing.
@@ -90,6 +91,10 @@ With `HARBOR_EMBEDDING_PROVIDER=openai`, the Qdrant flow uses OpenAI embeddings
 instead of the local deterministic embedding fixture. Use a separate Qdrant
 collection such as `harbor_healthcare_chunks_openai` because vector dimensions
 must match the embedding model.
+
+With `HARBOR_ANSWER_PROVIDER=openai`, Harbor sends the retrieved source excerpts
+to the OpenAI Responses API and asks for a concise cited answer grounded only in
+those excerpts.
 
 Default mode uses the local demo fixture:
 

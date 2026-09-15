@@ -1,11 +1,8 @@
-"""Grounded draft answer composition.
-
-Step 22 adds a deterministic answer composer. It does not call an LLM; it turns
-retrieved chunks into a conservative cited draft for API contract testing.
-"""
+"""Grounded answer composition."""
 
 from dataclasses import dataclass
 
+from app.agent.llm import LLMAnswerProvider, LLMAnswerRequest
 from app.retrieval.query_rewrite import QueryIntent
 from app.retrieval.service import RewrittenRetrievalResult
 from app.schemas.chat import Citation
@@ -18,10 +15,15 @@ class GroundedDraftAnswer:
 
     answer: str
     citations: list[Citation]
+    answer_mode: str = "deterministic"
+    llm_model: str | None = None
 
 
 class AnswerComposer:
     """Compose a simple cited answer from retrieval output."""
+
+    def __init__(self, llm_provider: LLMAnswerProvider | None = None) -> None:
+        self.llm_provider = llm_provider
 
     def compose(self, result: RewrittenRetrievalResult) -> GroundedDraftAnswer:
         """Create a cited draft answer from rewritten retrieval output."""
@@ -37,6 +39,29 @@ class AnswerComposer:
             )
 
         citations = deduplicate_citations(result.retrieval.hits)
+        if self.llm_provider is not None:
+            llm_answer = self.llm_provider.generate_answer(
+                LLMAnswerRequest(
+                    question=result.original_question,
+                    intent=str(result.rewrite.detected_intent),
+                    evidence=[
+                        format_evidence_line(hit, index)
+                        for index, hit in enumerate(result.retrieval.hits[:4], start=1)
+                    ],
+                )
+            )
+            if result.rewrite.needs_safety_check:
+                llm_answer = (
+                    "If this may be an emergency, call 911 or go to the nearest "
+                    f"emergency department.\n{llm_answer}"
+                )
+            return GroundedDraftAnswer(
+                answer=llm_answer,
+                citations=citations,
+                answer_mode="openai_grounded",
+                llm_model=self.llm_provider.model,
+            )
+
         evidence_lines = [
             f"- {hit.chunk.text} [{index}]"
             for index, hit in enumerate(result.retrieval.hits[:3], start=1)
@@ -97,3 +122,15 @@ def deduplicate_citations(hits: list[RetrievalHit]) -> list[Citation]:
         seen_urls.add(url)
         citations.append(Citation(title=citation.title, url=url))
     return citations
+
+
+def format_evidence_line(hit: RetrievalHit, index: int) -> str:
+    """Format one retrieved chunk for LLM-grounded answer generation."""
+
+    return "\n".join(
+        [
+            f"[{index}] {hit.chunk.title}",
+            f"URL: {hit.chunk.source_url}",
+            f"Excerpt: {hit.chunk.text}",
+        ]
+    )
