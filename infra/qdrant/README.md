@@ -6,7 +6,7 @@ Target collection name from the design baseline: `harbor_healthcare_chunks`.
 
 The planned collection configuration is documented in `collection.config.json`.
 
-Collection creation is intentionally deferred until the embedding model is selected, because Qdrant vector size must match the embedding model output dimension.
+Collection creation is handled by the local ingestion CLI when `--write-to-qdrant` is used, because Qdrant vector size must match the embedding model output dimension.
 
 Planned distance metric: cosine similarity.
 
@@ -50,3 +50,18 @@ Step 26 routes chat through a deterministic pre-LLM agent orchestrator. It still
 Step 27 adds golden-question evaluation for the deterministic local chat path. It still does not require Docker.
 
 Step 28 adds an ingestion dry-run CLI that previews Qdrant-ready points without writing to Qdrant. It still does not require Docker.
+
+The current Qdrant path can create the collection, upsert allowlisted live page chunks, and let the backend search that collection with `HARBOR_RETRIEVAL_MODE=qdrant`.
+
+Local run:
+
+```bash
+cd infra
+docker compose up -d qdrant
+cd ../backend
+source .venv/bin/activate
+python -m app.ingestion.cli --write-to-qdrant --default-live-urls
+HARBOR_RETRIEVAL_MODE=qdrant uvicorn app.main:app --reload
+```
+
+The current local embedding provider is deterministic and fixture-oriented. It proves the Qdrant integration path without calling external embedding APIs.

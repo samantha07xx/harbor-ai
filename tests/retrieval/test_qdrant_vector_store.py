@@ -6,6 +6,7 @@ from app.retrieval.qdrant_client import (
     QdrantPoint,
     QdrantVectorStore,
     cosine_similarity,
+    extract_collection_vector_size,
 )
 
 
@@ -76,6 +77,91 @@ def test_qdrant_vector_store_upserts_points_with_expected_request() -> None:
     assert b'"id":"point_a"' in captured_request.content
 
 
+def test_qdrant_vector_store_ensure_collection_creates_missing_collection() -> None:
+    captured_requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        captured_requests.append(request)
+        if request.method == "GET":
+            return httpx.Response(404, request=request)
+        return httpx.Response(200, json={"result": True}, request=request)
+
+    store = QdrantVectorStore(
+        url="http://qdrant.test",
+        collection_name="harbor_healthcare_chunks",
+        http_client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    store.ensure_collection(vector_size=4)
+
+    assert [request.method for request in captured_requests] == ["GET", "PUT"]
+    assert captured_requests[1].url.path == "/collections/harbor_healthcare_chunks"
+    assert b'"size":4' in captured_requests[1].content
+    assert b'"distance":"Cosine"' in captured_requests[1].content
+
+
+def test_qdrant_vector_store_ensure_collection_accepts_matching_collection() -> None:
+    captured_requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        captured_requests.append(request)
+        return httpx.Response(
+            200,
+            json={
+                "result": {
+                    "config": {
+                        "params": {
+                            "vectors": {
+                                "size": 4,
+                                "distance": "Cosine",
+                            }
+                        }
+                    }
+                }
+            },
+            request=request,
+        )
+
+    store = QdrantVectorStore(
+        url="http://qdrant.test",
+        collection_name="harbor_healthcare_chunks",
+        http_client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    store.ensure_collection(vector_size=4)
+
+    assert [request.method for request in captured_requests] == ["GET"]
+
+
+def test_qdrant_vector_store_ensure_collection_rejects_vector_size_mismatch() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "result": {
+                    "config": {
+                        "params": {
+                            "vectors": {
+                                "size": 16,
+                                "distance": "Cosine",
+                            }
+                        }
+                    }
+                }
+            },
+            request=request,
+        )
+
+    store = QdrantVectorStore(
+        url="http://qdrant.test",
+        collection_name="harbor_healthcare_chunks",
+        http_client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    with pytest.raises(ValueError, match="does not match"):
+        store.ensure_collection(vector_size=4)
+
+
 def test_qdrant_vector_store_search_maps_results() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.url.path == "/collections/harbor_healthcare_chunks/points/search"
@@ -117,3 +203,7 @@ def test_qdrant_vector_store_rejects_empty_search_vector() -> None:
 
     with pytest.raises(ValueError, match="cannot be empty"):
         store.search([])
+
+
+def test_extract_collection_vector_size_returns_none_for_missing_metadata() -> None:
+    assert extract_collection_vector_size({"result": {}}) is None

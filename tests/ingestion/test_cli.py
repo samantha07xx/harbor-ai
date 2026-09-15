@@ -1,6 +1,7 @@
 import json
 
-from app.ingestion.cli import main, run_dry_run
+from app.ingestion.cli import main, run_dry_run, run_qdrant_index
+from app.retrieval.qdrant_client import InMemoryVectorStore
 
 FIXTURE_HTML = """
 <html>
@@ -57,3 +58,25 @@ def test_cli_main_prints_summary(tmp_path, capsys) -> None:
     assert exit_code == 0
     assert summary["source_id"] == "ontario_health_pages"
     assert summary["point_count"] >= 1
+
+
+def test_run_qdrant_index_upserts_fixture_points_into_vector_store(tmp_path) -> None:
+    fixture_path = tmp_path / "ohip.html"
+    fixture_path.write_text(FIXTURE_HTML, encoding="utf-8")
+    vector_store = InMemoryVectorStore()
+
+    summary = run_qdrant_index(
+        urls=["https://www.ontario.ca/page/apply-ohip-and-get-health-card"],
+        fixture_html_path=fixture_path,
+        target_token_count=30,
+        overlap_token_count=5,
+        ensure_collection=False,
+        vector_store=vector_store,
+    )
+
+    assert summary["retrieval_mode"] == "qdrant"
+    assert summary["embedding_model"] == "local-keyword-fixture"
+    assert summary["indexed_page_count"] == 1
+    assert summary["upserted_point_count"] >= 1
+    assert summary["failed_pages"] == []
+    assert len(vector_store.points) == summary["upserted_point_count"]

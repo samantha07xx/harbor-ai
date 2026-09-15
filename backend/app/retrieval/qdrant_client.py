@@ -60,6 +60,40 @@ class QdrantVectorStore:
         self.api_key = api_key if api_key is not None else settings.qdrant_api_key
         self._http_client = http_client
 
+    def ensure_collection(self, *, vector_size: int, distance: str = "Cosine") -> None:
+        """Create the configured collection if it does not already exist."""
+
+        if vector_size <= 0:
+            raise ValueError("Qdrant vector size must be positive")
+
+        client = self._client()
+        existing_response = client.get(
+            f"{self.url}/collections/{self.collection_name}",
+            headers=self._headers(),
+        )
+        if existing_response.status_code == 200:
+            existing_size = extract_collection_vector_size(existing_response.json())
+            if existing_size is not None and existing_size != vector_size:
+                raise ValueError(
+                    "Existing Qdrant collection vector size "
+                    f"{existing_size} does not match configured size {vector_size}"
+                )
+            return
+        if existing_response.status_code != 404:
+            existing_response.raise_for_status()
+
+        create_response = client.put(
+            f"{self.url}/collections/{self.collection_name}",
+            headers=self._headers(),
+            json={
+                "vectors": {
+                    "size": vector_size,
+                    "distance": distance,
+                }
+            },
+        )
+        create_response.raise_for_status()
+
     def upsert_points(self, points: list[QdrantPoint]) -> None:
         """Upsert points into Qdrant."""
 
@@ -225,3 +259,21 @@ def serialize_datetime(value: datetime | None) -> str | None:
     if value is None:
         return None
     return value.isoformat()
+
+
+def extract_collection_vector_size(body: dict[str, Any]) -> int | None:
+    """Extract vector size from Qdrant collection metadata if present."""
+
+    vectors = (
+        body.get("result", {})
+        .get("config", {})
+        .get("params", {})
+        .get("vectors")
+    )
+    if not isinstance(vectors, dict):
+        return None
+
+    size = vectors.get("size")
+    if isinstance(size, int):
+        return size
+    return None

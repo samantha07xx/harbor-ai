@@ -23,6 +23,7 @@ Harbor is currently a local MVP/demo, not a production healthcare product.
 - Query rewrite, deterministic embeddings, in-memory vector search, and cited draft answer composition.
 - Local demo retrieval fixture for Health811, OHIP, newcomers, and emergency care.
 - Optional live-ingested local retrieval mode from allowlisted Ontario healthcare pages.
+- Optional Qdrant-backed retrieval mode after live page indexing.
 
 ### Ingestion
 
@@ -35,6 +36,7 @@ Harbor is currently a local MVP/demo, not a production healthcare product.
 - Qdrant-ready point mapping.
 - Indexing service boundary with in-memory test double.
 - CLI dry-run for fetch/extract/chunk/embed/index preview.
+- CLI path for creating the Qdrant collection and upserting allowlisted page chunks.
 
 ### Evaluation
 
@@ -44,7 +46,7 @@ Harbor is currently a local MVP/demo, not a production healthcare product.
 
 ## Not Implemented
 
-- Production Qdrant collection creation and live indexed corpus.
+- Production Qdrant payload indexes.
 - External embedding API calls.
 - LLM-based answer generation.
 - LLM-based ReAct or LangGraph agent loop.
@@ -69,6 +71,20 @@ Frontend chat
   -> ChatResponse with citations and metadata
 ```
 
+Qdrant mode uses an explicit indexing step before chat:
+
+```text
+Allowlisted live pages
+  -> Crawler
+  -> Extractor
+  -> Chunker
+  -> Local deterministic embeddings
+  -> Qdrant collection
+  -> POST /api/chat with HARBOR_RETRIEVAL_MODE=qdrant
+  -> Qdrant vector search
+  -> AnswerComposer
+```
+
 Default mode uses the local demo fixture:
 
 ```bash
@@ -79,6 +95,13 @@ Live ingestion mode fetches allowlisted pages and builds an in-memory index befo
 
 ```bash
 HARBOR_RETRIEVAL_MODE=live uvicorn app.main:app --reload
+```
+
+Qdrant mode searches a local Qdrant collection populated by the ingestion CLI:
+
+```bash
+python -m app.ingestion.cli --write-to-qdrant --default-live-urls
+HARBOR_RETRIEVAL_MODE=qdrant uvicorn app.main:app --reload
 ```
 
 ## Demo Questions

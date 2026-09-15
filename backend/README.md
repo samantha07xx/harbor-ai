@@ -23,6 +23,7 @@ Implemented:
 - Dry-run indexing pipeline for one approved page
 - Live Qdrant vector store interface with test doubles
 - Indexing service that upserts through the vector store boundary
+- Qdrant collection ensure/create helper
 - Retrieval service for query embedding and vector search
 - Lightweight deterministic query rewrite service
 - Rewrite-plus-retrieval composition service
@@ -35,15 +36,16 @@ Implemented:
 - Deterministic pre-LLM agent orchestrator
 - Golden-question evaluation runner
 - Ingestion dry-run CLI for fetch/extract/chunk/embed/index preview
+- Qdrant indexing CLI for allowlisted live pages
+- `HARBOR_RETRIEVAL_MODE=qdrant` retrieval path
 
 Not implemented yet:
 
 - Full LLM-based agent loop
 - External embedding API calls
-- Live Qdrant-backed retrieval verification
 - Recursive crawling
 - Batch source indexing
-- Production Qdrant collection management
+- Production Qdrant payload indexes
 - LLM-based grounded answer generation
 
 Run locally from this folder:
@@ -59,6 +61,12 @@ Run with live allowlisted page ingestion:
 
 ```bash
 HARBOR_RETRIEVAL_MODE=live uvicorn app.main:app --reload
+```
+
+Run with Qdrant-backed retrieval after indexing:
+
+```bash
+HARBOR_RETRIEVAL_MODE=qdrant uvicorn app.main:app --reload
 ```
 
 Then visit:
@@ -95,3 +103,9 @@ python -m app.ingestion.cli --url https://www.ontario.ca/page/apply-ohip-and-get
 ```
 
 For fully offline testing, pass `--fixture-html path/to/page.html`.
+
+Index the default allowlisted live pages into Qdrant:
+
+```bash
+python -m app.ingestion.cli --write-to-qdrant --default-live-urls
+```
