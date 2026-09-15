@@ -2,7 +2,7 @@
 
 Backend: Python, FastAPI, and Pydantic.
 
-Current status: Step 21 local retrieval API foundation.
+Current status: Step 22 deterministic cited answer drafting.
 
 Implemented:
 
@@ -27,6 +27,7 @@ Implemented:
 - Lightweight deterministic query rewrite service
 - Rewrite-plus-retrieval composition service
 - Local `POST /api/retrieval/search` endpoint backed by a demo in-memory index
+- Deterministic cited answer composer for retrieved chunks
 
 Not implemented yet:
 
@@ -36,7 +37,7 @@ Not implemented yet:
 - Recursive crawling
 - Batch source indexing
 - Production Qdrant collection management
-- Grounded answer generation
+- LLM-based grounded answer generation
 
 Run locally from this folder:
 

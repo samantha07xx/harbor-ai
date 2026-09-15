@@ -23,6 +23,13 @@ def test_retrieval_search_returns_rewrite_metadata_and_hits() -> None:
     assert body["retrieval"]["query"] == body["rewrite"]["primary_query"]
     assert len(body["retrieval"]["hits"]) == 1
     assert body["retrieval"]["hits"][0]["chunk"]["chunk_id"] == "demo_health811"
+    assert "Health811" in body["draft_answer"]
+    assert body["citations"] == [
+        {
+            "title": "Health811",
+            "url": "https://health811.ontario.ca/",
+        }
+    ]
 
 
 def test_retrieval_search_preserves_emergency_safety_signal() -> None:
@@ -38,6 +45,7 @@ def test_retrieval_search_preserves_emergency_safety_signal() -> None:
     body = response.json()
     assert body["rewrite"]["detected_intent"] == "emergency"
     assert body["rewrite"]["needs_safety_check"] is True
+    assert body["draft_answer"].startswith("If this may be an emergency, call 911")
 
 
 def test_retrieval_search_rejects_invalid_limit() -> None:

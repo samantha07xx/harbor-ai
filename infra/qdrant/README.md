@@ -36,3 +36,5 @@ Step 19 adds deterministic query rewrite before retrieval. Tests still use local
 Step 20 composes query rewrite with retrieval. Tests still use local deterministic components and the in-memory vector store.
 
 Step 21 exposes a retrieval testing API endpoint backed by a local demo in-memory index. It still does not require Docker.
+
+Step 22 adds deterministic cited answer drafting from retrieved chunks. It still does not require Docker.

@@ -3,6 +3,7 @@
 from pydantic import BaseModel, Field
 
 from app.retrieval.query_rewrite import QueryIntent
+from app.schemas.chat import Citation
 from app.schemas.chunks import RetrievalResult
 
 
@@ -29,3 +30,5 @@ class RetrievalSearchResponse(BaseModel):
     original_question: str
     rewrite: QueryRewriteMetadata
     retrieval: RetrievalResult
+    draft_answer: str
+    citations: list[Citation] = Field(default_factory=list)
