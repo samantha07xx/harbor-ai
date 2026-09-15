@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 1: project foundation only. It contains structure, configuration placeholders, and planning documents. Chat, crawling, retrieval, indexing, and agent logic are intentionally not implemented yet.
+This repository is currently at Step 2: minimal backend foundation. It contains structure, configuration placeholders, planning documents, and a runnable FastAPI backend skeleton. Crawling, retrieval, indexing, and agent logic are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -31,7 +31,7 @@ infra/      Planned local infrastructure such as Qdrant
 tests/      Planned backend, retrieval, and ingestion tests
 ```
 
-## Step 1 Status
+## Current Status
 
 Completed:
 
@@ -40,6 +40,9 @@ Completed:
 - Minimal backend, frontend, infra, and test placeholders
 - Environment variable example file
 - Git ignore rules for local development artifacts
+- Runnable FastAPI app skeleton
+- `GET /health`
+- Placeholder `POST /api/chat`
 
 Not implemented yet:
 
@@ -54,4 +57,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 2 should set up the backend service skeleton with FastAPI, basic app startup, health check, typed settings, and no RAG behavior yet.
+Step 3 should set up the simple frontend chat shell that can later connect to the backend.

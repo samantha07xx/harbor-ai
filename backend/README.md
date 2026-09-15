@@ -1,5 +1,35 @@
 # Harbor Backend
 
-Planned backend: Python, FastAPI, and Pydantic.
+Backend: Python, FastAPI, and Pydantic.
 
-This folder is scaffold only. The chat API, agent loop, retrieval, ingestion, and safety logic will be added incrementally after Step 1.
+Current status: minimal Step 2 service skeleton.
+
+Implemented:
+
+- FastAPI application factory
+- `GET /health`
+- Placeholder `POST /api/chat`
+- Environment-backed settings
+
+Not implemented yet:
+
+- Agent loop
+- Query rewrite
+- Embeddings
+- Qdrant retrieval
+- Source ingestion
+- Grounded answer generation
+
+Run locally from this folder:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[dev]"
+uvicorn app.main:app --reload
+```
+
+Then visit:
+
+- `http://127.0.0.1:8000/health`
+- `http://127.0.0.1:8000/docs`
