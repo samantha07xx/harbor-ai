@@ -22,6 +22,7 @@ Implemented:
 - Qdrant point mapping for embedded chunks
 - Dry-run indexing pipeline for one approved page
 - Live Qdrant vector store interface with test doubles
+- Indexing service that upserts through the vector store boundary
 
 Not implemented yet:
 
@@ -30,7 +31,7 @@ Not implemented yet:
 - Embeddings
 - Qdrant retrieval
 - Recursive crawling
-- Source indexing
+- Batch source indexing
 - External embedding API calls
 - Production Qdrant collection management
 - Retrieval service

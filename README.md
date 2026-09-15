@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 16: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, an embedding service interface with a deterministic test provider, Qdrant point mapping, a dry-run indexing pipeline, and a Qdrant vector store boundary. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, chunk creation for one extracted page, the embedding boundary, mapping from embedded chunks to Qdrant-ready points, a dry-run pipeline, and live-client/test-double interfaces for Qdrant. Recursive crawling, external embedding API calls, production Qdrant collection management, retrieval, and agent logic are intentionally not implemented yet.
+This repository is currently at Step 17: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, an embedding service interface with a deterministic test provider, Qdrant point mapping, a dry-run indexing pipeline, a Qdrant vector store boundary, and an indexing service that upserts prepared points through that boundary. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, chunk creation for one extracted page, the embedding boundary, mapping from embedded chunks to Qdrant-ready points, dry-run indexing, and a vector-store-backed indexing service. Recursive crawling, external embedding API calls, production Qdrant collection management, retrieval, and agent logic are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -59,6 +59,7 @@ Completed:
 - Qdrant point mapping for embedded chunks
 - Dry-run indexing pipeline for one approved page
 - Qdrant vector store interface and in-memory test double
+- Indexing service that upserts through the vector store boundary
 
 Not implemented yet:
 
@@ -73,4 +74,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 17 should add an indexing service that can upsert prepared dry-run points through the vector store interface, with tests using the in-memory store.
+Step 18 should add a retrieval service that embeds a query, searches the vector store, and maps hits into retrieval results using test data.
