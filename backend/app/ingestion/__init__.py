@@ -9,6 +9,7 @@ from app.ingestion.crawler import (
     find_allowed_source,
 )
 from app.ingestion.extractor import extract_page
+from app.ingestion.indexer import DryRunIndexer, DryRunIndexingResult
 from app.ingestion.page_ingestion import (
     ChunkedPageIngestionResult,
     PageIngestionResult,
@@ -20,6 +21,8 @@ __all__ = [
     "ChunkedPageIngestionResult",
     "ChunkingSettings",
     "Crawler",
+    "DryRunIndexer",
+    "DryRunIndexingResult",
     "PageFetchError",
     "PageIngestionResult",
     "PageIngestionService",

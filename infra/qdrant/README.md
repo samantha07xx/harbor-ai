@@ -22,3 +22,5 @@ Planned payload index fields:
 
 Step 14 defines the Python mapping from embedded chunks into Qdrant-ready points.
 It still does not connect to or write to a live Qdrant instance.
+
+Step 15 adds a dry-run indexing pipeline that produces Qdrant-ready points for one approved page, still without live Qdrant writes.

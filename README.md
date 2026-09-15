@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 14: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, an embedding service interface with a deterministic test provider, and Qdrant point mapping. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, chunk creation for one extracted page, the embedding boundary, and mapping from embedded chunks to Qdrant-ready points. Recursive crawling, external embedding API calls, live Qdrant writes, retrieval, indexing, and agent logic are intentionally not implemented yet.
+This repository is currently at Step 15: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, an embedding service interface with a deterministic test provider, Qdrant point mapping, and a dry-run indexing pipeline. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, chunk creation for one extracted page, the embedding boundary, mapping from embedded chunks to Qdrant-ready points, and a dry-run pipeline that produces points without writing them. Recursive crawling, external embedding API calls, live Qdrant writes, retrieval, and agent logic are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -57,6 +57,7 @@ Completed:
 - Single-page fetch-extract-chunk ingestion service
 - Embedding service interface and deterministic test provider
 - Qdrant point mapping for embedded chunks
+- Dry-run indexing pipeline for one approved page
 
 Not implemented yet:
 
@@ -71,4 +72,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 15 should compose one-page ingestion, chunking, embedding, and Qdrant point mapping without writing to Qdrant.
+Step 16 should add a live Qdrant client interface with dependency-injected test doubles, without requiring Docker for unit tests.

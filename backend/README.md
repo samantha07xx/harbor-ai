@@ -20,6 +20,7 @@ Implemented:
 - Single-page fetch-extract-chunk ingestion service
 - Embedding service interface and deterministic test provider
 - Qdrant point mapping for embedded chunks
+- Dry-run indexing pipeline for one approved page
 
 Not implemented yet:
 
