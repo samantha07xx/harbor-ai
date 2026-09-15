@@ -2,7 +2,7 @@
 
 Backend: Python, FastAPI, and Pydantic.
 
-Current status: Step 23 pre-agent local RAG chat response.
+Current status: Step 24 safety-gated pre-agent local RAG chat response.
 
 Implemented:
 
@@ -29,6 +29,7 @@ Implemented:
 - Local `POST /api/retrieval/search` endpoint backed by a demo in-memory index
 - Deterministic cited answer composer for retrieved chunks
 - Chat endpoint wired to local retrieval and cited draft answers
+- Lightweight emergency and out-of-scope safety response layer
 
 Not implemented yet:
 

@@ -40,3 +40,5 @@ Step 21 exposes a retrieval testing API endpoint backed by a local demo in-memor
 Step 22 adds deterministic cited answer drafting from retrieved chunks. It still does not require Docker.
 
 Step 23 wires the chat endpoint to the local retrieval and cited draft answer path. It still does not require Docker.
+
+Step 24 adds a lightweight safety and scope layer before local chat retrieval. It still does not require Docker.
