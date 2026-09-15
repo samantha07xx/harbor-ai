@@ -2,7 +2,7 @@
 
 Frontend: React, TypeScript, and Vite.
 
-Current status: minimal Step 3 chat shell.
+Current status: Step 23 chat shell connected to the pre-agent local RAG backend.
 
 Implemented:
 
@@ -12,11 +12,12 @@ Implemented:
 - Loading and error states
 - Suggested prompt buttons
 - API client for `POST /api/chat`
+- Citation rendering from backend responses
 
 Not implemented yet:
 
-- Real grounded RAG responses
-- Citation rendering from indexed sources
+- Full agentic grounded RAG responses
+- Citation rendering from indexed Qdrant sources
 - Conversation persistence
 - User accounts
 

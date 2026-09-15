@@ -5,7 +5,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from app.agent.answer_composer import AnswerComposer
-from app.retrieval.demo import get_local_demo_rewritten_retrieval_service
+from app.api.dependencies import get_answer_composer, get_rewritten_retrieval_service
 from app.retrieval.service import RewrittenRetrievalResult, RewrittenRetrievalService
 from app.schemas.retrieval import (
     QueryRewriteMetadata,
@@ -14,18 +14,6 @@ from app.schemas.retrieval import (
 )
 
 router = APIRouter(prefix="/retrieval", tags=["retrieval"])
-
-
-def get_rewritten_retrieval_service() -> RewrittenRetrievalService:
-    """Return the current retrieval service dependency."""
-
-    return get_local_demo_rewritten_retrieval_service()
-
-
-def get_answer_composer() -> AnswerComposer:
-    """Return the current answer composer dependency."""
-
-    return AnswerComposer()
 
 
 @router.post("/search", response_model=RetrievalSearchResponse)

@@ -38,3 +38,5 @@ Step 20 composes query rewrite with retrieval. Tests still use local determinist
 Step 21 exposes a retrieval testing API endpoint backed by a local demo in-memory index. It still does not require Docker.
 
 Step 22 adds deterministic cited answer drafting from retrieved chunks. It still does not require Docker.
+
+Step 23 wires the chat endpoint to the local retrieval and cited draft answer path. It still does not require Docker.

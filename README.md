@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 22: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, embedding and vector-store boundaries, retrieval over a vector store, deterministic query rewrite, a rewrite-plus-retrieval composition service, a local retrieval testing API endpoint, and deterministic cited answer drafting. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, ingestion pipeline pieces, Qdrant-ready point mapping, dry-run indexing, vector-store-backed indexing, query embedding plus vector search result mapping, a lightweight query rewrite service, a composed retrieval entrypoint for later agent use, a small local demo retrieval fixture for endpoint testing, and a conservative answer composer that formats retrieved chunks with citations. Recursive crawling, external embedding API calls, production Qdrant collection management, and a full agent loop are intentionally not implemented yet.
+This repository is currently at Step 23: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, embedding and vector-store boundaries, retrieval over a vector store, deterministic query rewrite, a rewrite-plus-retrieval composition service, a local retrieval testing API endpoint, deterministic cited answer drafting, and a pre-agent local RAG chat response. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, ingestion pipeline pieces, Qdrant-ready point mapping, dry-run indexing, vector-store-backed indexing, query embedding plus vector search result mapping, a lightweight query rewrite service, a composed retrieval entrypoint for later agent use, a small local demo retrieval fixture for endpoint testing, a conservative answer composer that formats retrieved chunks with citations, and a chat endpoint wired to that local path. Recursive crawling, external embedding API calls, production Qdrant collection management, and a full agent loop are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -42,7 +42,7 @@ Completed:
 - Git ignore rules for local development artifacts
 - Runnable FastAPI app skeleton
 - `GET /health`
-- Placeholder `POST /api/chat`
+- Pre-agent local RAG `POST /api/chat`
 - Runnable React/Vite chat shell
 - Frontend API client for backend chat requests
 - Local Qdrant Docker Compose service
@@ -65,10 +65,11 @@ Completed:
 - Rewrite-plus-retrieval composition service
 - Local retrieval testing API endpoint
 - Deterministic cited answer composer
+- Chat endpoint wired to local retrieval and cited draft answers
 
 Not implemented yet:
 
-- Live backend chat API backed by RAG
+- Full agentic backend chat API
 - Live Qdrant runtime verification
 - Recursive crawling
 - External embedding API calls
@@ -77,4 +78,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 23 should wire the chat placeholder to the local retrieval and cited draft answer path, while keeping the response clearly marked as pre-agent.
+Step 24 should add a lightweight safety response layer for emergency and out-of-scope questions before expanding the agent loop.

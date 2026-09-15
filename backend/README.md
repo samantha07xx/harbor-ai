@@ -2,13 +2,13 @@
 
 Backend: Python, FastAPI, and Pydantic.
 
-Current status: Step 22 deterministic cited answer drafting.
+Current status: Step 23 pre-agent local RAG chat response.
 
 Implemented:
 
 - FastAPI application factory
 - `GET /health`
-- Placeholder `POST /api/chat`
+- Pre-agent local RAG `POST /api/chat`
 - Environment-backed settings
 - Core trusted source and chunk schemas
 - Trusted source registry loader
@@ -28,10 +28,11 @@ Implemented:
 - Rewrite-plus-retrieval composition service
 - Local `POST /api/retrieval/search` endpoint backed by a demo in-memory index
 - Deterministic cited answer composer for retrieved chunks
+- Chat endpoint wired to local retrieval and cited draft answers
 
 Not implemented yet:
 
-- Agent loop
+- Full agent loop
 - External embedding API calls
 - Live Qdrant-backed retrieval verification
 - Recursive crawling
@@ -59,4 +60,12 @@ Local retrieval endpoint:
 curl -X POST http://127.0.0.1:8000/api/retrieval/search \
   -H "Content-Type: application/json" \
   -d '{"question":"Can I call someone if it is not an emergency?","limit":1}'
+```
+
+Local chat endpoint:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"session_id":"local-test","message":"Can I call someone if it is not an emergency?","user_context":{"province":"Ontario"}}'
 ```
