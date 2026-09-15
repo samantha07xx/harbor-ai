@@ -5,9 +5,9 @@ in-memory storage, so Docker is not required.
 """
 
 from datetime import datetime
-from hashlib import sha256
 from math import sqrt
 from typing import Any, Protocol
+from uuid import NAMESPACE_URL, uuid5
 
 import httpx
 from pydantic import BaseModel, Field
@@ -197,9 +197,9 @@ def cosine_similarity(left: list[float], right: list[float]) -> float:
 
 
 def make_qdrant_point_id(chunk_id: str) -> str:
-    """Create a deterministic Qdrant point ID from a chunk ID."""
+    """Create a deterministic UUID point ID from a chunk ID."""
 
-    return sha256(chunk_id.encode("utf-8")).hexdigest()
+    return str(uuid5(NAMESPACE_URL, f"harbor:{chunk_id}"))
 
 
 def chunk_payload(chunk: SourceChunk, embedding: EmbeddingResult) -> dict[str, Any]:

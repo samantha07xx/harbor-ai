@@ -41,11 +41,12 @@ def make_embedding() -> EmbeddingResult:
     )
 
 
-def test_make_qdrant_point_id_is_stable_hash() -> None:
+def test_make_qdrant_point_id_is_stable_uuid() -> None:
     point_id = make_qdrant_point_id("chunk_ontario_health_pages_0001")
 
     assert point_id == make_qdrant_point_id("chunk_ontario_health_pages_0001")
-    assert len(point_id) == 64
+    assert len(point_id) == 36
+    assert point_id.count("-") == 4
 
 
 def test_map_chunk_to_qdrant_point_preserves_vector_and_payload() -> None:
