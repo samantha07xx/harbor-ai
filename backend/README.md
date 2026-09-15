@@ -13,6 +13,7 @@ Implemented:
 - Core trusted source and chunk schemas
 - Trusted source registry loader
 - Crawler interface with URL allowlist checks
+- Fetch-free HTML extraction contract
 
 Not implemented yet:
 
@@ -21,6 +22,7 @@ Not implemented yet:
 - Embeddings
 - Qdrant retrieval
 - Source ingestion
+- Network page fetching
 - Grounded answer generation
 
 Run locally from this folder:

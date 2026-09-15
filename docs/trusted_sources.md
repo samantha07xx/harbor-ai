@@ -16,6 +16,8 @@ Step 6 only defines the registry. It does not crawl, approve new domains dynamic
 
 Step 7 adds URL allowlist checks so future crawler code can reject unapproved domains and paths before any network fetch happens.
 
+Step 8 adds the fetch-free extraction contract for converting already-fetched HTML into clean page text and metadata.
+
 Candidate later additions:
 
 - Public Health Ontario pages

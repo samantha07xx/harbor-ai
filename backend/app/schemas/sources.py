@@ -71,3 +71,38 @@ class SourcePage(BaseModel):
     http_status: int = Field(ge=100, le=599)
     language: LanguageCode = LanguageCode.ENGLISH
     trust_tier: TrustTier
+
+
+class FetchedPage(BaseModel):
+    """Raw page fetched from an approved source."""
+
+    source_id: str = Field(min_length=1, pattern=r"^[a-z0-9][a-z0-9_-]*$")
+    url: AnyHttpUrl
+    raw_html: str = Field(min_length=1)
+    http_status: int = Field(ge=100, le=599)
+    fetched_at: datetime
+    trust_tier: TrustTier
+    language: LanguageCode = LanguageCode.ENGLISH
+
+
+class ExtractedLink(BaseModel):
+    """Link preserved from extracted page content."""
+
+    text: str = Field(min_length=1)
+    url: AnyHttpUrl
+
+
+class ExtractedPage(BaseModel):
+    """Clean text and metadata extracted from a fetched page."""
+
+    source_id: str = Field(min_length=1, pattern=r"^[a-z0-9][a-z0-9_-]*$")
+    url: AnyHttpUrl
+    canonical_url: AnyHttpUrl | None = None
+    title: str = Field(min_length=1)
+    clean_text: str = Field(min_length=1)
+    clean_text_hash: str = Field(pattern=r"^sha256:[a-f0-9]{64}$")
+    headings: list[str] = Field(default_factory=list)
+    links: list[ExtractedLink] = Field(default_factory=list)
+    extracted_at: datetime
+    language: LanguageCode = LanguageCode.ENGLISH
+    trust_tier: TrustTier
