@@ -28,7 +28,7 @@ Trusted Ontario healthcare pages
 - Single-page crawler for approved healthcare source URLs.
 - HTML extraction and metadata-aware chunking.
 - Qdrant point mapping, collection creation, indexing, and retrieval.
-- Optional OpenAI embeddings with `text-embedding-3-small`.
+- OpenAI embeddings with `text-embedding-3-small`.
 - Query rewrite before retrieval.
 - OpenAI ReAct-style planner that can choose:
   - `retrieve`
@@ -40,20 +40,20 @@ Trusted Ontario healthcare pages
 - OpenAI grounded answer generation with citations.
 - Emergency and out-of-scope safety routing.
 - Golden-question evaluation.
-- Local deterministic fallbacks for testing without paid API calls.
+- Local deterministic fallbacks for development and testing without paid API calls.
 
 ## Runtime Modes
 
 ### Local Demo Mode
 
 Uses hand-written demo chunks. It does not require Docker, Qdrant, or OpenAI.
-This mode is mainly for quick UI and API testing.
+This mode is a development fallback for quick UI and API testing.
 
 ### Local Qdrant Mode
 
 Uses real crawled/chunked source pages and Qdrant, but keeps local deterministic
 embedding and answer behavior. This proves the ingestion and vector database
-path without paid API calls.
+path during development without paid API calls.
 
 ### Final AI Mode
 
