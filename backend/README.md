@@ -16,6 +16,7 @@ Implemented:
 - Fetch-free HTML extraction contract
 - Guarded single-page HTML fetching
 - Single-page fetch-and-extract ingestion service
+- Metadata-aware chunking for extracted pages
 
 Not implemented yet:
 
@@ -24,7 +25,7 @@ Not implemented yet:
 - Embeddings
 - Qdrant retrieval
 - Recursive crawling
-- Chunking
+- Embeddings
 - Source indexing
 - Grounded answer generation
 

@@ -1,5 +1,6 @@
 """Source ingestion modules."""
 
+from app.ingestion.chunker import ChunkingSettings, chunk_extracted_page
 from app.ingestion.crawler import (
     Crawler,
     PageFetchError,
@@ -12,12 +13,14 @@ from app.ingestion.page_ingestion import PageIngestionResult, PageIngestionServi
 from app.ingestion.source_registry import get_enabled_sources, load_trusted_sources
 
 __all__ = [
+    "ChunkingSettings",
     "Crawler",
     "PageFetchError",
     "PageIngestionResult",
     "PageIngestionService",
     "UrlAllowlistDecision",
     "UrlNotAllowedError",
+    "chunk_extracted_page",
     "extract_page",
     "find_allowed_source",
     "get_enabled_sources",

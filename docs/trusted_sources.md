@@ -22,6 +22,8 @@ Step 9 adds guarded single-page fetching. Fetching still requires a URL to pass 
 
 Step 10 composes guarded fetching with extraction for one approved page. It still does not recursively crawl or index content.
 
+Step 11 adds metadata-aware chunking for extracted pages. It still does not generate embeddings or index content.
+
 Candidate later additions:
 
 - Public Health Ontario pages
