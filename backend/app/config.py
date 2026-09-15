@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     )
     openai_base_url: str = "https://api.openai.com/v1"
     openai_embedding_model: str = "text-embedding-3-small"
+    agent_provider: str = "deterministic"
     answer_provider: str = "deterministic"
     llm_model: str = "gpt-5-mini"
     retrieval_mode: str = "demo"

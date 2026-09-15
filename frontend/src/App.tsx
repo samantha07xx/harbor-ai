@@ -43,15 +43,30 @@ function statusBadges(metadata?: Record<string, unknown>): string[] {
 
   const badges: string[] = [];
   const status = metadata.implementation_status;
+  const agentMode = metadata.agent_mode;
+  const plannerRoute = metadata.planner_route;
   const safetyRoute = metadata.safety_route;
   const intent = metadata.detected_intent;
   const toolName = metadata.tool_name;
   const corpusMode = metadata.retrieval_corpus_mode;
+  const answerMode = metadata.answer_mode;
 
   if (status === "deterministic_agent_safety") {
     badges.push("Safety");
   } else if (status === "deterministic_agent_local_rag") {
     badges.push("Local RAG");
+  } else if (status === "openai_agent_tool_rag") {
+    badges.push("Agent RAG");
+  }
+
+  const agentLabel = metadataLabel(agentMode);
+  if (agentLabel === "Openai React Planner") {
+    badges.push("ReAct Planner");
+  }
+
+  const plannerLabel = metadataLabel(plannerRoute);
+  if (plannerLabel) {
+    badges.push(plannerLabel);
   }
 
   const routeLabel = metadataLabel(safetyRoute);
@@ -72,6 +87,11 @@ function statusBadges(metadata?: Record<string, unknown>): string[] {
   const corpusLabel = metadataLabel(corpusMode);
   if (corpusLabel) {
     badges.push(corpusLabel);
+  }
+
+  const answerLabel = metadataLabel(answerMode);
+  if (answerLabel) {
+    badges.push(answerLabel);
   }
 
   return badges;

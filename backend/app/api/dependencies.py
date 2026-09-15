@@ -2,6 +2,7 @@
 
 from app.agent.answer_composer import AnswerComposer
 from app.agent.llm import OpenAIAnswerProvider
+from app.agent.planner import AgentPlanner, OpenAIReActPlanner
 from app.agent.react_agent import DeterministicHealthcareAgent
 from app.agent.tools import HealthcareRetrievalTool
 from app.config import get_settings
@@ -44,6 +45,19 @@ def get_safety_policy() -> SafetyPolicy:
     return SafetyPolicy()
 
 
+def get_agent_planner() -> AgentPlanner | None:
+    """Return the configured ReAct-style planner if enabled."""
+
+    settings = get_settings()
+    if settings.agent_provider.lower() == "openai":
+        return OpenAIReActPlanner(
+            api_key=settings.openai_api_key or "",
+            model=settings.llm_model,
+            base_url=settings.openai_base_url,
+        )
+    return None
+
+
 def get_healthcare_retrieval_tool() -> HealthcareRetrievalTool:
     """Return the current agent-facing healthcare retrieval tool."""
 
@@ -59,4 +73,5 @@ def get_deterministic_healthcare_agent() -> DeterministicHealthcareAgent:
     return DeterministicHealthcareAgent(
         safety_policy=get_safety_policy(),
         retrieval_tool=get_healthcare_retrieval_tool(),
+        planner=get_agent_planner(),
     )

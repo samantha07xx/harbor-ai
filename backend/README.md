@@ -26,6 +26,7 @@ Implemented:
 - Qdrant collection ensure/create helper
 - Retrieval service for query embedding and vector search
 - Optional OpenAI embeddings provider through `HARBOR_EMBEDDING_PROVIDER=openai`
+- Optional OpenAI ReAct-style planner through `HARBOR_AGENT_PROVIDER=openai`
 - Optional OpenAI grounded answer generation through `HARBOR_ANSWER_PROVIDER=openai`
 - Lightweight deterministic query rewrite service
 - Rewrite-plus-retrieval composition service
@@ -78,6 +79,7 @@ export HARBOR_EMBEDDING_PROVIDER=openai
 export HARBOR_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 export HARBOR_QDRANT_COLLECTION=harbor_healthcare_chunks_openai
 python -m app.ingestion.cli --write-to-qdrant --default-live-urls
+export HARBOR_AGENT_PROVIDER=openai
 export HARBOR_ANSWER_PROVIDER=openai
 export HARBOR_LLM_MODEL=gpt-5-mini
 HARBOR_RETRIEVAL_MODE=qdrant uvicorn app.main:app --reload

@@ -1,6 +1,6 @@
 # Harbor
 
-Harbor is a local demo of an AI-assisted Ontario healthcare navigation app for newcomers. It provides a web chat UI backed by source-grounded retrieval, citations, safety/scope routing, live allowlisted ingestion, optional Qdrant-backed retrieval, optional OpenAI embeddings, optional OpenAI grounded answer generation, ingestion dry-runs, and golden-question evaluation.
+Harbor is a local demo of an AI-assisted Ontario healthcare navigation app for newcomers. It provides a web chat UI backed by ReAct-style tool planning, source-grounded retrieval, citations, safety/scope routing, live allowlisted ingestion, optional Qdrant-backed retrieval, optional OpenAI embeddings, optional OpenAI grounded answer generation, ingestion dry-runs, and golden-question evaluation.
 
 The original design baseline lives in `docs/harbor_project_documentation.md`. The current implemented state is summarized in `docs/current_state.md`.
 
@@ -14,6 +14,7 @@ The original design baseline lives in `docs/harbor_project_documentation.md`. Th
 - Optional live-ingested retrieval mode from allowlisted Ontario healthcare pages
 - Optional Qdrant-backed retrieval mode after indexing allowlisted pages
 - Optional OpenAI embeddings provider for Qdrant indexing and search
+- Optional OpenAI ReAct-style planner that decides whether to call retrieval
 - Optional OpenAI grounded answer generation from retrieved source excerpts
 - Trusted source registry and URL allowlist checks
 - One-page fetch, extraction, chunking, embedding, Qdrant-point preview, and Qdrant upsert CLI
@@ -59,6 +60,7 @@ export HARBOR_EMBEDDING_PROVIDER=openai
 export HARBOR_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 export HARBOR_QDRANT_COLLECTION=harbor_healthcare_chunks_openai
 python -m app.ingestion.cli --write-to-qdrant --default-live-urls
+export HARBOR_AGENT_PROVIDER=openai
 export HARBOR_ANSWER_PROVIDER=openai
 export HARBOR_LLM_MODEL=gpt-5-mini
 HARBOR_RETRIEVAL_MODE=qdrant uvicorn app.main:app --reload
@@ -130,6 +132,7 @@ python -m app.ingestion.cli --write-to-qdrant --default-live-urls
 - Set `HARBOR_RETRIEVAL_MODE=qdrant` after indexing to search the configured Qdrant collection.
 - Live mode is still local and deterministic. Qdrant mode can use either the local keyword fixture or OpenAI embeddings.
 - LLM answer generation is optional and off by default. Set `HARBOR_ANSWER_PROVIDER=openai` to use OpenAI grounded answer generation from retrieved source excerpts.
+- ReAct-style planning is optional and off by default. Set `HARBOR_AGENT_PROVIDER=openai` to let the agent decide whether to retrieve, clarify, answer directly, or route out of scope.
 - The agent is deterministic and pre-LLM; it is shaped like an agent boundary but does not reason with a model.
 - The ingestion pipeline is single-page and dry-run oriented. It does not recursively crawl sites.
 
