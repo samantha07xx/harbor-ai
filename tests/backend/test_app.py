@@ -1,5 +1,7 @@
+import httpx
 from fastapi.testclient import TestClient
 
+from app.api.dependencies import get_deterministic_healthcare_agent
 from app.main import create_app
 
 client = TestClient(create_app())
@@ -75,3 +77,34 @@ def test_chat_routes_out_of_scope_question_to_scope_response() -> None:
     assert body["metadata"]["implementation_status"] == "deterministic_agent_safety"
     assert body["metadata"]["agent_mode"] == "deterministic_pre_llm"
     assert body["metadata"]["safety_route"] == "out_of_scope"
+
+
+def test_chat_returns_readable_message_when_openai_rate_limited() -> None:
+    class RateLimitedAgent:
+        def run_turn(self, request):
+            http_request = httpx.Request("POST", "https://api.openai.com/v1/responses")
+            http_response = httpx.Response(429, request=http_request)
+            raise httpx.HTTPStatusError(
+                "Too Many Requests",
+                request=http_request,
+                response=http_response,
+            )
+
+    client.app.dependency_overrides[get_deterministic_healthcare_agent] = RateLimitedAgent
+    try:
+        response = client.post(
+            "/api/chat",
+            json={
+                "session_id": "test-session",
+                "message": "How do I apply for OHIP?",
+                "user_context": {"province": "Ontario"},
+            },
+        )
+    finally:
+        client.app.dependency_overrides.clear()
+
+    assert response.status_code == 200
+    body = response.json()
+    assert "rate limiting" in body["answer"]
+    assert body["metadata"]["implementation_status"] == "openai_rate_limited"
+    assert body["metadata"]["provider_status_code"] == 429
