@@ -40,7 +40,8 @@ def test_openai_answer_provider_posts_grounded_responses_request() -> None:
     assert captured_request.url.path == "/v1/responses"
     assert captured_request.headers["authorization"] == "Bearer test-key"
     assert b'"model":"gpt-5-mini"' in captured_request.content
-    assert b"Answer only from the supplied source excerpts" in captured_request.content
+    assert b"Answer only from the trusted source material" in captured_request.content
+    assert b"Do not mention internal words" in captured_request.content
     assert answer == "Apply through ServiceOntario with required documents. [1]"
 
 

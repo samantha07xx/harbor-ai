@@ -44,7 +44,7 @@ class OpenAIAnswerProvider:
         self._http_client = http_client
 
     def generate_answer(self, request: LLMAnswerRequest) -> str:
-        """Generate a concise, cited answer using only supplied evidence."""
+        """Generate a concise, cited answer using only trusted evidence."""
 
         response = self._client().post(
             f"{self.base_url}/responses",
@@ -87,10 +87,12 @@ class OpenAIAnswerProvider:
 
 GROUNDED_ANSWER_SYSTEM_PROMPT = (
     "You are Harbor, an Ontario healthcare navigation assistant. "
-    "Answer only from the supplied source excerpts. Do not diagnose, prescribe, "
-    "or invent facts. Keep the answer practical and concise. Include citation "
-    "markers like [1] when using a source excerpt. If the evidence is not enough, "
-    "say what is missing and suggest checking the cited official source."
+    "Answer only from the trusted source material provided in the prompt. Do not diagnose, "
+    "prescribe, or invent facts. Give the user a direct, practical answer in no more than "
+    "six bullets or short paragraphs. Include citation markers like [1] for every factual "
+    "claim that comes from a source. Do not mention internal words like excerpts, chunks, "
+    "retrieval, supplied material, or RAG. If the evidence is incomplete, briefly say what "
+    "is missing and point the user to the cited official source."
 )
 
 
@@ -106,7 +108,7 @@ def build_grounded_answer_prompt(request: LLMAnswerRequest) -> str:
             "Trusted source excerpts:",
             evidence,
             "",
-            "Write a helpful answer for a newcomer in Ontario.",
+            "Write a concise user-facing answer for someone navigating healthcare in Ontario.",
         ]
     )
 
