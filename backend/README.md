@@ -25,6 +25,7 @@ Implemented:
 - Indexing service that upserts through the vector store boundary
 - Retrieval service for query embedding and vector search
 - Lightweight deterministic query rewrite service
+- Rewrite-plus-retrieval composition service
 
 Not implemented yet:
 

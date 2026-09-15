@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 19: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, embedding and vector-store boundaries, retrieval over a vector store, and deterministic query rewrite. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, ingestion pipeline pieces, Qdrant-ready point mapping, dry-run indexing, vector-store-backed indexing, query embedding plus vector search result mapping, and a lightweight query rewrite service. Recursive crawling, external embedding API calls, production Qdrant collection management, and agent logic are intentionally not implemented yet.
+This repository is currently at Step 20: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-extract-chunk ingestion, embedding and vector-store boundaries, retrieval over a vector store, deterministic query rewrite, and a small rewrite-plus-retrieval composition service. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, ingestion pipeline pieces, Qdrant-ready point mapping, dry-run indexing, vector-store-backed indexing, query embedding plus vector search result mapping, a lightweight query rewrite service, and a composed retrieval entrypoint for later agent use. Recursive crawling, external embedding API calls, production Qdrant collection management, and agent logic are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -62,18 +62,17 @@ Completed:
 - Indexing service that upserts through the vector store boundary
 - Retrieval service for query embedding and vector search
 - Lightweight deterministic query rewrite service
+- Rewrite-plus-retrieval composition service
 
 Not implemented yet:
 
-- Backend chat API
-- Frontend chat UI
-- Qdrant runtime
-- Crawling or ingestion
-- Embeddings
-- Retrieval
+- Live backend chat API backed by RAG
+- Live Qdrant runtime verification
+- Recursive crawling
+- External embedding API calls
 - Agent loop
 - Grounded answer generation
 
 ## Next Step
 
-Step 20 should compose query rewrite with retrieval, still using test vector stores before connecting it to chat.
+Step 21 should add a small retrieval API endpoint for local testing, still before wiring the chat endpoint to agentic answers.

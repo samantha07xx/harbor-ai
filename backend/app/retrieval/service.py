@@ -1,14 +1,26 @@
-"""Retrieval service for vector-store-backed healthcare chunks.
+"""Retrieval services for vector-store-backed healthcare chunks.
 
 Step 18 embeds a query, searches the vector store, and maps hits into
-RetrievalResult. It does not rewrite queries or call an agent.
+RetrievalResult. Step 20 composes deterministic query rewrite with retrieval,
+without calling an agent.
 """
 
+from dataclasses import dataclass
 from datetime import datetime
 
 from app.retrieval.embeddings import EmbeddingService
 from app.retrieval.qdrant_client import QdrantSearchHit, VectorStore
+from app.retrieval.query_rewrite import QueryRewriteResult, QueryRewriteService
 from app.schemas.chunks import RetrievalHit, RetrievalResult, SourceChunk
+
+
+@dataclass(frozen=True)
+class RewrittenRetrievalResult:
+    """Retrieval result plus the query rewrite metadata that produced it."""
+
+    original_question: str
+    rewrite: QueryRewriteResult
+    retrieval: RetrievalResult
 
 
 class RetrievalService:
@@ -35,6 +47,30 @@ class RetrievalService:
                 "jurisdiction": "Ontario",
                 "language": "en",
             },
+        )
+
+
+class RewrittenRetrievalService:
+    """Rewrite a user question before running the retrieval service."""
+
+    def __init__(
+        self,
+        *,
+        query_rewrite_service: QueryRewriteService,
+        retrieval_service: RetrievalService,
+    ) -> None:
+        self.query_rewrite_service = query_rewrite_service
+        self.retrieval_service = retrieval_service
+
+    def retrieve(self, question: str, *, limit: int = 6) -> RewrittenRetrievalResult:
+        """Rewrite a question and retrieve chunks for the primary rewritten query."""
+
+        rewrite = self.query_rewrite_service.rewrite(question)
+        retrieval = self.retrieval_service.retrieve(rewrite.primary_query, limit=limit)
+        return RewrittenRetrievalResult(
+            original_question=question,
+            rewrite=rewrite,
+            retrieval=retrieval,
         )
 
 

@@ -32,3 +32,5 @@ Step 17 adds an indexing service that can upsert prepared points through that ve
 Step 18 adds retrieval over the vector store boundary. Tests still use the in-memory store rather than Docker.
 
 Step 19 adds deterministic query rewrite before retrieval. Tests still use local deterministic components.
+
+Step 20 composes query rewrite with retrieval. Tests still use local deterministic components and the in-memory vector store.

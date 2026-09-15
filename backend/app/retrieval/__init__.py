@@ -26,7 +26,12 @@ from app.retrieval.query_rewrite import (
     QueryRewriteService,
     RewriteRule,
 )
-from app.retrieval.service import RetrievalService, map_search_hit_to_retrieval_hit
+from app.retrieval.service import (
+    RetrievalService,
+    RewrittenRetrievalResult,
+    RewrittenRetrievalService,
+    map_search_hit_to_retrieval_hit,
+)
 
 __all__ = [
     "DeterministicEmbeddingProvider",
@@ -43,6 +48,8 @@ __all__ = [
     "QueryRewriteService",
     "RetrievalService",
     "RewriteRule",
+    "RewrittenRetrievalResult",
+    "RewrittenRetrievalService",
     "VectorStore",
     "chunk_payload",
     "cosine_similarity",
