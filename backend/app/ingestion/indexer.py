@@ -1,0 +1,1 @@
+"""Planned Qdrant indexing service."""

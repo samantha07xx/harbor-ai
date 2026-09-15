@@ -1,0 +1,1 @@
+"""Planned embedding service."""

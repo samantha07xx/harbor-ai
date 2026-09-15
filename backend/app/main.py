@@ -1,10 +1,5 @@
-from fastapi import FastAPI
+"""FastAPI application entrypoint placeholder.
 
-from app.api import health, knowledge_base, prepare
-from app.config import APP_NAME
+Step 2 will turn this into a runnable backend service.
+"""
 
-app = FastAPI(title=APP_NAME)
-
-app.include_router(health.router, prefix="/api")
-app.include_router(prepare.router, prefix="/api")
-app.include_router(knowledge_base.router, prefix="/api")

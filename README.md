@@ -1,110 +1,57 @@
-# Harbor AI
+# Harbor
 
-Harbor AI is an AI-powered healthcare communication assistant for newcomers in Ontario.
+Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-It helps users prepare for non-emergency primary care visits and communicate more confidently during healthcare interactions by combining RAG, LLMs, speech-to-text, and shared visit context.
+This repository is currently at Step 1: project foundation only. It contains structure, configuration placeholders, and planning documents. Chat, crawling, retrieval, indexing, and agent logic are intentionally not implemented yet.
 
-## Problem
+## Design Baseline
 
-Newcomers in Ontario often face more than a language barrier when using the healthcare system. They may not know where to seek care, what documents to bring, how to describe symptoms, or how to understand follow-up instructions.
+The source design document is kept at:
 
-Harbor AI focuses on healthcare communication support, not medical diagnosis.
+- `docs/harbor_project_documentation.md`
 
-## MVP Scope
+Build decisions should follow that document unless a later commit updates the architecture.
 
-The MVP focuses on non-emergency primary care communication in Ontario.
+## Planned Stack
 
-Core scenarios:
+- Frontend: React with TypeScript
+- Backend: Python with FastAPI and Pydantic
+- Agent/RAG: lightweight ReAct loop or LangGraph later
+- Vector database: Qdrant
+- Ingestion: allowlist crawler, content extraction, metadata-aware chunking, embeddings
+- Evaluation: small golden question set and retrieval/citation checks
 
-- Walk-in clinic visits
-- Family doctor / nurse practitioner appointments
-
-Out of scope for MVP:
-
-- Medical diagnosis
-- Emergency triage
-- Insurance claims
-- Appointment booking
-- Long-term medical record management
-
-## Core Features
-
-### Prepare
-
-The Prepare flow helps users get ready before a healthcare visit.
-
-It can support:
-
-- Visit type selection
-- Symptom summary
-- Pre-visit checklist
-- Common questions from clinicians
-- Questions users may want to ask
-- Personalized visit notes
-
-### Live Assist
-
-The Live Assist flow helps users during healthcare conversations.
-
-It can support:
-
-- Text input
-- Speech-to-text
-- Translation
-- Plain-language explanations
-- Suggested phrases
-- Visit summary
-
-### Shared Context
-
-Harbor AI connects preparation with live assistance through shared visit context.
-
-The Prepare flow generates a visit context, and Live Assist reuses it to provide more relevant communication support.
-
-## AI Architecture
-
-Harbor AI is designed around four AI capabilities:
-
-- LLM: generates visit briefs, explanations, suggested phrases, and summaries
-- RAG: retrieves trusted Ontario healthcare navigation knowledge
-- Speech AI: transcribes spoken input into text
-- Shared Context: carries user-specific visit information across product flows
-
-## Knowledge Base
-
-The MVP knowledge base uses curated Markdown files based on public Ontario healthcare resources.
-
-Initial scope:
+## Current Structure
 
 ```text
-knowledge_base/
-  ontario/
-    primary_care/
-    insurance/
-    visit_preparation/
-    safety/
+docs/       Project documentation and architecture notes
+frontend/   Planned web chat UI
+backend/    Planned FastAPI service and RAG modules
+infra/      Planned local infrastructure such as Qdrant
+tests/      Planned backend, retrieval, and ingestion tests
 ```
 
-The knowledge base is designed to support RAG retrieval for primary care communication scenarios.
+## Step 1 Status
 
-## Tech Stack
+Completed:
 
-Planned stack:
+- Clean Harbor repository structure
+- Design document copied into `docs/`
+- Minimal backend, frontend, infra, and test placeholders
+- Environment variable example file
+- Git ignore rules for local development artifacts
 
-- Frontend: React + TypeScript
-- Backend: FastAPI
-- AI: OpenAI APIs
-- Vector Database: Qdrant
-- Knowledge Base: Markdown
-- Deployment: Docker Compose
+Not implemented yet:
 
-## Documentation
+- Backend chat API
+- Frontend chat UI
+- Qdrant runtime
+- Crawling or ingestion
+- Embeddings
+- Retrieval
+- Agent loop
+- Grounded answer generation
 
-- [PRD](docs/PRD_EN.md)
-- [SDD](docs/SDD_EN.md)
+## Next Step
 
-## Disclaimer
-
-Harbor AI is not a medical diagnosis tool and does not replace doctors, nurses, pharmacists, emergency services, or licensed healthcare professionals.
-
-For urgent or emergency situations, users should call 911 or seek immediate medical care.
+Step 2 should set up the backend service skeleton with FastAPI, basic app startup, health check, typed settings, and no RAG behavior yet.
