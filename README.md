@@ -28,7 +28,7 @@ The detailed current implementation notes live in `docs/current_state.md`.
 Start Qdrant:
 
 ```bash
-cd infra
+cd /Users/samantha/Documents/Codex/2026-09-15/harbor-ai-repo/infra
 docker compose up -d qdrant
 curl http://localhost:6333/healthz
 ```
@@ -36,7 +36,7 @@ curl http://localhost:6333/healthz
 Index trusted pages with OpenAI embeddings, then start the backend:
 
 ```bash
-cd backend
+cd /Users/samantha/Documents/Codex/2026-09-15/harbor-ai-repo/backend
 source .venv/bin/activate
 
 export OPENAI_API_KEY="your_api_key_here"
@@ -47,14 +47,14 @@ python -m app.ingestion.cli --write-to-qdrant --default-live-urls
 export HARBOR_AGENT_PROVIDER=openai
 export HARBOR_ANSWER_PROVIDER=openai
 export HARBOR_LLM_MODEL=gpt-5-mini
-HARBOR_RETRIEVAL_MODE=qdrant uvicorn app.main:app --reload
+HARBOR_RETRIEVAL_MODE=qdrant uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
 Start the frontend in a second terminal:
 
 ```bash
-cd frontend
-npm run dev
+cd /Users/samantha/Documents/Codex/2026-09-15/harbor-ai-repo/frontend
+npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
 Open:
@@ -86,7 +86,7 @@ These modes are for development and testing. The portfolio showcase path is Fina
 Run backend tests:
 
 ```bash
-cd backend
+cd /Users/samantha/Documents/Codex/2026-09-15/harbor-ai-repo/backend
 .venv/bin/pytest
 .venv/bin/ruff check . ../tests/backend ../tests/ingestion ../tests/retrieval
 ```
@@ -94,28 +94,28 @@ cd backend
 Run frontend build:
 
 ```bash
-cd frontend
+cd /Users/samantha/Documents/Codex/2026-09-15/harbor-ai-repo/frontend
 npm run build
 ```
 
 Run deterministic evaluation:
 
 ```bash
-cd backend
+cd /Users/samantha/Documents/Codex/2026-09-15/harbor-ai-repo/backend
 python -m app.evaluation.run_eval
 ```
 
 Run ingestion dry-run:
 
 ```bash
-cd backend
+cd /Users/samantha/Documents/Codex/2026-09-15/harbor-ai-repo/backend
 python -m app.ingestion.cli --url https://www.ontario.ca/page/apply-ohip-and-get-health-card
 ```
 
 Index the default live allowlisted pages into Qdrant:
 
 ```bash
-cd backend
+cd /Users/samantha/Documents/Codex/2026-09-15/harbor-ai-repo/backend
 python -m app.ingestion.cli --write-to-qdrant --default-live-urls
 ```
 
