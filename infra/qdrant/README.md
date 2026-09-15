@@ -44,3 +44,5 @@ Step 23 wires the chat endpoint to the local retrieval and cited draft answer pa
 Step 24 adds a lightweight safety and scope layer before local chat retrieval. It still does not require Docker.
 
 Step 25 adds an agent-facing retrieval tool boundary over the local retrieval path. It still does not require Docker.
+
+Step 26 routes chat through a deterministic pre-LLM agent orchestrator. It still does not require Docker.

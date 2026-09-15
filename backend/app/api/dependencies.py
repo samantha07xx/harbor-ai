@@ -1,6 +1,7 @@
 """Shared FastAPI dependencies."""
 
 from app.agent.answer_composer import AnswerComposer
+from app.agent.react_agent import DeterministicHealthcareAgent
 from app.agent.tools import HealthcareRetrievalTool
 from app.retrieval.demo import get_local_demo_rewritten_retrieval_service
 from app.retrieval.service import RewrittenRetrievalService
@@ -31,4 +32,13 @@ def get_healthcare_retrieval_tool() -> HealthcareRetrievalTool:
     return HealthcareRetrievalTool(
         retrieval_service=get_rewritten_retrieval_service(),
         answer_composer=get_answer_composer(),
+    )
+
+
+def get_deterministic_healthcare_agent() -> DeterministicHealthcareAgent:
+    """Return the deterministic pre-LLM healthcare agent."""
+
+    return DeterministicHealthcareAgent(
+        safety_policy=get_safety_policy(),
+        retrieval_tool=get_healthcare_retrieval_tool(),
     )

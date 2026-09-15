@@ -31,7 +31,8 @@ def test_chat_returns_pre_agent_local_rag_response() -> None:
             "url": "https://health811.ontario.ca/",
         }
     ]
-    assert body["metadata"]["implementation_status"] == "pre_agent_local_rag"
+    assert body["metadata"]["implementation_status"] == "deterministic_agent_local_rag"
+    assert body["metadata"]["agent_mode"] == "deterministic_pre_llm"
     assert body["metadata"]["safety_route"] == "proceed"
     assert body["metadata"]["tool_name"] == "healthcare_retrieval"
     assert body["metadata"]["detected_intent"] == "non_emergency_advice"
@@ -52,7 +53,8 @@ def test_chat_routes_emergency_question_to_safety_response() -> None:
     body = response.json()
     assert body["answer"].startswith("If this may be a medical emergency")
     assert body["citations"] == []
-    assert body["metadata"]["implementation_status"] == "safety_layer"
+    assert body["metadata"]["implementation_status"] == "deterministic_agent_safety"
+    assert body["metadata"]["agent_mode"] == "deterministic_pre_llm"
     assert body["metadata"]["safety_route"] == "emergency"
 
 
@@ -70,5 +72,6 @@ def test_chat_routes_out_of_scope_question_to_scope_response() -> None:
     body = response.json()
     assert "Ontario healthcare navigation" in body["answer"]
     assert body["citations"] == []
-    assert body["metadata"]["implementation_status"] == "safety_layer"
+    assert body["metadata"]["implementation_status"] == "deterministic_agent_safety"
+    assert body["metadata"]["agent_mode"] == "deterministic_pre_llm"
     assert body["metadata"]["safety_route"] == "out_of_scope"

@@ -2,7 +2,7 @@
 
 Backend: Python, FastAPI, and Pydantic.
 
-Current status: Step 25 agent-facing healthcare retrieval tool boundary.
+Current status: Step 26 deterministic pre-LLM agent orchestration.
 
 Implemented:
 
@@ -31,10 +31,11 @@ Implemented:
 - Chat endpoint wired to local retrieval and cited draft answers
 - Lightweight emergency and out-of-scope safety response layer
 - Agent-facing healthcare retrieval tool boundary
+- Deterministic pre-LLM agent orchestrator
 
 Not implemented yet:
 
-- Full agent loop
+- Full LLM-based agent loop
 - External embedding API calls
 - Live Qdrant-backed retrieval verification
 - Recursive crawling
