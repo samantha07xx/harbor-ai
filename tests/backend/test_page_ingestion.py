@@ -1,6 +1,7 @@
 import httpx
 import pytest
 
+from app.ingestion.chunker import ChunkingSettings
 from app.ingestion.crawler import Crawler, UrlNotAllowedError
 from app.ingestion.page_ingestion import PageIngestionService
 from app.ingestion.source_registry import get_enabled_sources
@@ -56,3 +57,38 @@ def test_ingest_one_page_rejects_unapproved_url_before_fetch() -> None:
 
     with pytest.raises(UrlNotAllowedError):
         service.ingest_one_page("https://example.com/page/apply-ohip")
+
+
+def test_ingest_one_page_chunks_fetches_extracts_and_chunks_allowed_html() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            headers={"content-type": "text/html; charset=utf-8"},
+            text="""
+            <html>
+              <body>
+                <main>
+                  <h1>Documents needed to get a health card</h1>
+                  <p>Bring proof of identity.</p>
+                  <p>Bring proof of residency.</p>
+                  <p>Bring proof of eligible immigration status.</p>
+                </main>
+              </body>
+            </html>
+            """,
+            request=request,
+        )
+
+    service = make_service(handler)
+
+    result = service.ingest_one_page_chunks(
+        "https://www.ontario.ca/page/documents-needed-get-health-card",
+        chunking_settings=ChunkingSettings(target_token_count=18, overlap_token_count=6),
+    )
+
+    assert result.fetched_page.source_id == "ontario_health_pages"
+    assert result.extracted_page.title == "Documents needed to get a health card"
+    assert len(result.chunks) >= 1
+    assert result.chunks[0].source_id == "ontario_health_pages"
+    assert result.chunks[0].topic == "required_documents"
+    assert result.chunks[0].content_hash.startswith("sha256:")

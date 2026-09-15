@@ -24,6 +24,8 @@ Step 10 composes guarded fetching with extraction for one approved page. It stil
 
 Step 11 adds metadata-aware chunking for extracted pages. It still does not generate embeddings or index content.
 
+Step 12 composes guarded fetching, extraction, and chunking for one approved page. It still does not recursively crawl, generate embeddings, or index content.
+
 Candidate later additions:
 
 - Public Health Ontario pages

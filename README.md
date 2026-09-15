@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 11: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-and-extract ingestion, and metadata-aware chunking. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, a small service that composes fetch plus extraction, and chunk creation for extracted pages. Recursive crawling, embeddings, retrieval, indexing, and agent logic are intentionally not implemented yet.
+This repository is currently at Step 12: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, one-page fetch-and-extract ingestion, metadata-aware chunking, and a single-page fetch-extract-chunk pipeline. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, and chunk creation for one extracted page. Recursive crawling, embeddings, retrieval, indexing, and agent logic are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -54,6 +54,7 @@ Completed:
 - Guarded single-page HTML fetch with tests
 - Single-page fetch-and-extract ingestion service
 - Metadata-aware chunking for extracted pages
+- Single-page fetch-extract-chunk ingestion service
 
 Not implemented yet:
 
@@ -68,4 +69,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 12 should compose one-page ingestion with chunking, without embeddings or Qdrant indexing.
+Step 13 should add an embedding service interface and deterministic test double, without calling any external embedding API yet.

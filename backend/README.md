@@ -17,6 +17,7 @@ Implemented:
 - Guarded single-page HTML fetching
 - Single-page fetch-and-extract ingestion service
 - Metadata-aware chunking for extracted pages
+- Single-page fetch-extract-chunk ingestion service
 
 Not implemented yet:
 
@@ -25,8 +26,8 @@ Not implemented yet:
 - Embeddings
 - Qdrant retrieval
 - Recursive crawling
-- Embeddings
 - Source indexing
+- Embeddings
 - Grounded answer generation
 
 Run locally from this folder:
