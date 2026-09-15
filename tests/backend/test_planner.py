@@ -92,9 +92,36 @@ def test_openai_react_planner_posts_responses_request() -> None:
     assert captured_request is not None
     assert captured_request.url.path == "/v1/responses"
     assert captured_request.headers["authorization"] == "Bearer test-key"
-    assert b'"max_output_tokens":180' in captured_request.content
+    assert b'"max_output_tokens":320' in captured_request.content
     assert b"healthcare_retrieval tool" in captured_request.content
     assert plan.route == AgentPlanRoute.RETRIEVE
+
+
+def test_openai_react_planner_defaults_to_retrieve_for_malformed_output() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={"output_text": ""},
+            request=request,
+        )
+
+    planner = OpenAIReActPlanner(
+        api_key="test-key",
+        model="gpt-5-mini",
+        base_url="https://api.openai.test/v1",
+        http_client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    plan = planner.plan(
+        AgentPlanRequest(
+            message="How do I apply for OHIP?",
+            user_context={"province": "Ontario"},
+        )
+    )
+
+    assert plan.route == AgentPlanRoute.RETRIEVE
+    assert plan.retrieval_question == "How do I apply for OHIP?"
+    assert "not valid JSON" in str(plan.rationale)
 
 
 def test_openai_react_planner_requires_api_key() -> None:

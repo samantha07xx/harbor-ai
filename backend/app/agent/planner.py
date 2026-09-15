@@ -8,7 +8,7 @@ from typing import Any, Protocol
 
 import httpx
 
-PLANNER_MAX_OUTPUT_TOKENS = 180
+PLANNER_MAX_OUTPUT_TOKENS = 320
 
 
 class AgentPlanRoute(StrEnum):
@@ -102,7 +102,16 @@ class OpenAIReActPlanner:
             },
         )
         response.raise_for_status()
-        return parse_agent_plan(extract_response_text(response.json()))
+        response_text = extract_response_text(response.json())
+        try:
+            return parse_agent_plan(response_text)
+        except (json.JSONDecodeError, ValueError):
+            return AgentPlan(
+                route=AgentPlanRoute.RETRIEVE,
+                message="",
+                retrieval_question=request.message,
+                rationale="Planner output was not valid JSON; defaulting to trusted source lookup.",
+            )
 
     def _client(self) -> httpx.Client:
         """Return the configured HTTP client."""
