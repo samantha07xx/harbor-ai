@@ -20,6 +20,8 @@ Step 8 adds the fetch-free extraction contract for converting already-fetched HT
 
 Step 9 adds guarded single-page fetching. Fetching still requires a URL to pass the trusted source allowlist first.
 
+Step 10 composes guarded fetching with extraction for one approved page. It still does not recursively crawl or index content.
+
 Candidate later additions:
 
 - Public Health Ontario pages

@@ -2,7 +2,7 @@
 
 Harbor is a planned AI-powered Ontario healthcare navigation web app for newcomers. The product will provide a simple chat interface backed by an agentic RAG system grounded in trusted official and public healthcare sources.
 
-This repository is currently at Step 9: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, fetch-free HTML extraction, and guarded single-page fetching. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, and one-page HTTP fetching behind the allowlist. Recursive crawling, retrieval, indexing, and agent logic are intentionally not implemented yet.
+This repository is currently at Step 10: minimal frontend/backend foundation, local Qdrant infrastructure scaffold, core data schemas, trusted source registry, URL allowlist checks, HTML extraction, guarded single-page fetching, and one-page fetch-and-extract ingestion. It contains structure, planning documents, a runnable FastAPI backend skeleton, a React chat shell, Docker Compose for local Qdrant, Pydantic models, approved Ontario healthcare seed URLs, a crawler boundary, an extractor contract, one-page HTTP fetching behind the allowlist, and a small service that composes fetch plus extraction. Recursive crawling, chunking, retrieval, indexing, and agent logic are intentionally not implemented yet.
 
 ## Design Baseline
 
@@ -52,6 +52,7 @@ Completed:
 - Crawler interface with URL allowlist decisions
 - Fetch-free HTML extraction contract and tests
 - Guarded single-page HTML fetch with tests
+- Single-page fetch-and-extract ingestion service
 
 Not implemented yet:
 
@@ -66,4 +67,4 @@ Not implemented yet:
 
 ## Next Step
 
-Step 10 should combine guarded fetching with extraction for one approved page, without recursive crawl or indexing.
+Step 11 should implement metadata-aware chunking for one extracted page, without embeddings or Qdrant indexing.

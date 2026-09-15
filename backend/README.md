@@ -15,6 +15,7 @@ Implemented:
 - Crawler interface with URL allowlist checks
 - Fetch-free HTML extraction contract
 - Guarded single-page HTML fetching
+- Single-page fetch-and-extract ingestion service
 
 Not implemented yet:
 
@@ -23,6 +24,7 @@ Not implemented yet:
 - Embeddings
 - Qdrant retrieval
 - Recursive crawling
+- Chunking
 - Source indexing
 - Grounded answer generation
 
