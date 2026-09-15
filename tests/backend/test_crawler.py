@@ -1,4 +1,13 @@
-from app.ingestion.crawler import Crawler, find_allowed_source, normalize_url
+import httpx
+import pytest
+
+from app.ingestion.crawler import (
+    Crawler,
+    PageFetchError,
+    UrlNotAllowedError,
+    find_allowed_source,
+    normalize_url,
+)
 from app.ingestion.source_registry import get_enabled_sources
 
 
@@ -72,3 +81,70 @@ def test_crawler_plans_url_decisions_without_fetching() -> None:
     )
 
     assert [decision.is_allowed for decision in decisions] == [True, False]
+
+
+def test_crawler_fetches_allowed_single_page() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.headers["user-agent"].startswith("HarborBot/")
+        return httpx.Response(
+            200,
+            headers={"content-type": "text/html; charset=utf-8"},
+            text="<html><body><main><h1>Apply for OHIP</h1></main></body></html>",
+            request=request,
+        )
+
+    crawler = Crawler(
+        get_enabled_sources(),
+        http_client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    page = crawler.fetch_page("https://www.ontario.ca/page/apply-ohip-and-get-health-card")
+
+    assert page.source_id == "ontario_health_pages"
+    assert page.http_status == 200
+    assert "Apply for OHIP" in page.raw_html
+    assert page.trust_tier == "official_government"
+
+
+def test_crawler_rejects_unapproved_url_before_fetching() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise AssertionError("Unapproved URLs must not be fetched")
+
+    crawler = Crawler(
+        get_enabled_sources(),
+        http_client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    with pytest.raises(UrlNotAllowedError):
+        crawler.fetch_page("https://example.com/not-approved")
+
+
+def test_crawler_rejects_non_html_response() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            headers={"content-type": "application/pdf"},
+            content=b"%PDF",
+            request=request,
+        )
+
+    crawler = Crawler(
+        get_enabled_sources(),
+        http_client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    with pytest.raises(PageFetchError, match="did not return HTML"):
+        crawler.fetch_page("https://www.ontario.ca/page/apply-ohip-and-get-health-card")
+
+
+def test_crawler_wraps_http_errors() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(500, request=request)
+
+    crawler = Crawler(
+        get_enabled_sources(),
+        http_client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    with pytest.raises(PageFetchError, match="Unable to fetch approved URL"):
+        crawler.fetch_page("https://www.ontario.ca/page/apply-ohip-and-get-health-card")

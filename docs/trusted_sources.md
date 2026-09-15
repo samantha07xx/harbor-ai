@@ -18,6 +18,8 @@ Step 7 adds URL allowlist checks so future crawler code can reject unapproved do
 
 Step 8 adds the fetch-free extraction contract for converting already-fetched HTML into clean page text and metadata.
 
+Step 9 adds guarded single-page fetching. Fetching still requires a URL to pass the trusted source allowlist first.
+
 Candidate later additions:
 
 - Public Health Ontario pages

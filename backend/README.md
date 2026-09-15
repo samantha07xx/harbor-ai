@@ -14,6 +14,7 @@ Implemented:
 - Trusted source registry loader
 - Crawler interface with URL allowlist checks
 - Fetch-free HTML extraction contract
+- Guarded single-page HTML fetching
 
 Not implemented yet:
 
@@ -21,8 +22,8 @@ Not implemented yet:
 - Query rewrite
 - Embeddings
 - Qdrant retrieval
-- Source ingestion
-- Network page fetching
+- Recursive crawling
+- Source indexing
 - Grounded answer generation
 
 Run locally from this folder:
