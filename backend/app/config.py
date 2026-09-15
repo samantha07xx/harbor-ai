@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     api_host: str = "127.0.0.1"
     api_port: int = 8000
     app_name: str = "Harbor API"
+    qdrant_url: str = "http://localhost:6333"
+    qdrant_api_key: str | None = None
     qdrant_collection: str = "harbor_healthcare_chunks"
     cors_origins: list[str] = [
         "http://127.0.0.1:5173",

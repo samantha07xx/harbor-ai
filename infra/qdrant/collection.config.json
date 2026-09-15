@@ -1,0 +1,11 @@
+{
+  "collection_name": "harbor_healthcare_chunks",
+  "distance": "Cosine",
+  "vector_size": null,
+  "status": "planned",
+  "notes": [
+    "Create this collection after the embedding model is selected.",
+    "Vector size must match the selected embedding model.",
+    "Payload indexes should include source_domain, source_url, topic, trust_tier, jurisdiction, language, and last_crawled_at."
+  ]
+}
